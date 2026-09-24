@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- 타일이 자체 배경을 가져 다크/라이트 어느 바탕에서도 동일하게 식별됨 -->
+  <defs>
+    <linearGradient id="dd-tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#313d4f"/>
+      <stop offset="1" stop-color="#1f2733"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#dd-tile)"/>
+  <rect x="17" y="17" width="478" height="478" rx="103" fill="none" stroke="#ffffff" stroke-opacity="0.08" stroke-width="2"/>
+
+  <!-- 두 문서 판 -->
+  <rect x="72" y="112" width="168" height="288" rx="22" fill="#eef2f6"/>
+  <rect x="272" y="112" width="168" height="288" rx="22" fill="#eef2f6"/>
+
+  <!-- 왼쪽: 삭제 계열 코드 바 -->
+  <rect x="98" y="154" width="116" height="26" rx="13" fill="#e5534b"/>
+  <rect x="98" y="198" width="84" height="26" rx="13" fill="#b3bcc7"/>
+  <rect x="98" y="242" width="102" height="26" rx="13" fill="#e5534b"/>
+  <rect x="98" y="286" width="116" height="26" rx="13" fill="#b3bcc7"/>
+  <rect x="98" y="330" width="72" height="26" rx="13" fill="#b3bcc7"/>
+
+  <!-- 오른쪽: 추가 계열 코드 바 -->
+  <rect x="298" y="154" width="100" height="26" rx="13" fill="#2ea043"/>
+  <rect x="298" y="198" width="116" height="26" rx="13" fill="#b3bcc7"/>
+  <rect x="298" y="242" width="80" height="26" rx="13" fill="#2ea043"/>
+  <rect x="298" y="286" width="110" height="26" rx="13" fill="#2ea043"/>
+  <rect x="298" y="330" width="88" height="26" rx="13" fill="#b3bcc7"/>
+
+  <!-- 중앙 배지: 좌우 화살표(비교·병합). 바깥 원은 타일색 헤일로로 판과 분리 -->
+  <circle cx="256" cy="256" r="100" fill="#1f2733"/>
+  <circle cx="256" cy="256" r="90" fill="#1f6feb"/>
+
+  <rect x="188" y="226" width="84" height="20" rx="10" fill="#ffffff"/>
+  <path d="M268 206 L320 236 L268 266 Z" fill="#ffffff"/>
+
+  <rect x="240" y="266" width="84" height="20" rx="10" fill="#ffffff"/>
+  <path d="M244 246 L192 276 L244 306 Z" fill="#ffffff"/>
+</svg>

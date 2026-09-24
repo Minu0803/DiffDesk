@@ -1,0 +1,633 @@
+/* DiffDesk 컴포넌트 스타일 — UI-SPEC §2 클래스 인벤토리 구현 (시안 B: 스테이터스 밴드 + 인디고 소프트) */
+
+/* ── 베이스 ─────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: var(--dd-font-ui);
+  font-size: var(--dd-fs-ui);
+  color: var(--dd-fg);
+  background: var(--dd-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 앱 루트 ────────────────────────────────────────────── */
+
+/* 5행: 도구줄 / 결과 밴드 / 판 헤더 / 에디터 / 상태줄 */
+.dd-app {
+  display: grid;
+  grid-template-rows: var(--dd-toolbar-h) var(--dd-band-h) auto 1fr var(--dd-statusbar-h);
+  height: 100%;
+  min-width: 0;
+}
+
+/* ── 도구줄 ─────────────────────────────────────────────── */
+
+.dd-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--dd-gap);
+  padding: 0 10px;
+  background: var(--dd-bg-elev);
+  border-bottom: 1px solid var(--dd-border);
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.dd-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dd-toolbar__divider {
+  flex: none;
+  width: 1px;
+  height: 16px;
+  margin: 0 2px;
+  background: var(--dd-border-strong);
+}
+
+.dd-toolbar__spacer {
+  flex: 1 1 0;
+  min-width: var(--dd-gap);
+}
+
+/* ── 버튼 ───────────────────────────────────────────────── */
+
+/* 소프트 폴리시: 상시 외곽선 대신 무테 + hover 면 — 보더 슬롯은 유지해 상태 전환 시 1px 점프 방지 */
+.dd-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: none;
+  height: 28px;
+  padding: 0 10px;
+  font: inherit;
+  font-size: var(--dd-fs-ui);
+  line-height: 1;
+  color: var(--dd-fg);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--dd-radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  transition: background-color 0.1s ease, border-color 0.1s ease, color 0.1s ease;
+}
+
+.dd-btn:hover {
+  background: var(--dd-bg-hover);
+}
+
+.dd-btn:active {
+  background: var(--dd-bg-active);
+}
+
+.dd-btn:focus-visible {
+  outline: 2px solid var(--dd-focus-ring);
+  outline-offset: 1px;
+}
+
+.dd-btn[disabled] {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
+.dd-btn--icon {
+  width: 28px;
+  padding: 0;
+}
+
+.dd-btn--ghost {
+  border-color: transparent;
+}
+
+/* 토글 켜짐 — :active보다 뒤에 둬서 눌림 배경이 accent를 덮지 않게 */
+.dd-btn.is-active {
+  background: var(--dd-accent);
+  border-color: transparent;
+  color: var(--dd-accent-fg);
+}
+
+.dd-btn.is-active:hover,
+.dd-btn.is-active:active {
+  background: var(--dd-accent-hover);
+}
+
+/* ── 셀렉트 (언어 선택) ──────────────────────────────────── */
+
+/* 값 홀더라 무테 버튼과 달리 상시 외곽선 유지 — 대신 약한 보더로 소프트하게 */
+.dd-select {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: none;
+  height: 28px;
+  max-width: 150px;
+  padding: 0 24px 0 9px;
+  font: inherit;
+  font-size: var(--dd-fs-ui);
+  color: var(--dd-fg);
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888f98' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  border: 1px solid var(--dd-border-strong);
+  border-radius: var(--dd-radius-sm);
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+.dd-select:hover {
+  background-color: var(--dd-bg-hover);
+}
+
+.dd-select:focus-visible {
+  outline: 2px solid var(--dd-focus-ring);
+  outline-offset: 1px;
+}
+
+.dd-select option {
+  background: var(--dd-bg-elev);
+  color: var(--dd-fg);
+}
+
+/* ── 비교 결과 밴드 ─────────────────────────────────────── */
+
+.dd-band {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  background: var(--dd-bg-elev);
+  border-bottom: 1px solid var(--dd-border);
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: var(--dd-fs-small);
+  color: var(--dd-fg);
+  user-select: none;
+}
+
+.dd-band--empty {
+  background: var(--dd-bg-elev);
+  color: var(--dd-fg-muted);
+}
+
+/* 동일 판정 — 줄 전체가 초록으로 읽히는 게 핵심 */
+.dd-band--same {
+  background: var(--dd-added-bg);
+  color: var(--dd-added);
+}
+
+/* 차이 판정 — 왼쪽 3px 앰버 바. border-left 대신 inset shadow: 상태 전환 시 콘텐츠 3px 밀림 방지 */
+.dd-band--diff {
+  background: var(--dd-bg-elev);
+  box-shadow: inset 3px 0 0 var(--dd-modified);
+}
+
+.dd-band__verdict {
+  flex: none;
+  font-size: var(--dd-fs-ui);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.dd-band__sub {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: var(--dd-fs-small);
+  opacity: 0.75;
+}
+
+/* 카운트 알약 — 채움·글자는 semantic 쌍, 보더는 같은 색을 낮춰(soft) 1px 링 */
+.dd-band__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  height: 20px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  border: 1px solid transparent;
+  border-radius: 999px;
+}
+
+.dd-band__chip--mod {
+  color: var(--dd-modified);
+  background: var(--dd-modified-bg);
+  border-color: var(--dd-modified);
+  border-color: color-mix(in srgb, var(--dd-modified) 45%, transparent);
+}
+
+.dd-band__chip--add {
+  color: var(--dd-added);
+  background: var(--dd-added-bg);
+  border-color: var(--dd-added);
+  border-color: color-mix(in srgb, var(--dd-added) 45%, transparent);
+}
+
+.dd-band__chip--del {
+  color: var(--dd-removed);
+  background: var(--dd-removed-bg);
+  border-color: var(--dd-removed);
+  border-color: color-mix(in srgb, var(--dd-removed) 45%, transparent);
+}
+
+/* 차이 분포 리본 — 마커(.dd-band__mark)의 절대배치 기준 */
+.dd-band__ribbon {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 72px;
+  height: 6px;
+  margin: 0 2px;
+  background: var(--dd-bg-active);
+  border-radius: 3px;
+}
+
+/* 마커는 button — UA 기본 스타일 리셋 필수. 좌표는 프론트가 left(%)로 지정, 중심 정렬은 여기서 */
+.dd-band__mark {
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  transform: translate(-50%, -50%);
+  background: var(--dd-fg-faint);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: filter 0.1s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* 8×12 시각체 그대로, 히트영역만 20×24로 확장 */
+.dd-band__mark::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
+.dd-band__mark--mod {
+  background: var(--dd-modified);
+}
+
+.dd-band__mark--add {
+  background: var(--dd-added);
+}
+
+.dd-band__mark--del {
+  background: var(--dd-removed);
+}
+
+.dd-band__mark:hover {
+  filter: brightness(1.15);
+}
+
+.dd-band__mark.is-current {
+  transform: translate(-50%, -50%) scale(1.25);
+  /* elev 헤일로 + muted 링 — 어떤 마커 색 위에서도 두 테마 공통 식별 */
+  box-shadow: 0 0 0 2px var(--dd-bg-elev), 0 0 0 3px var(--dd-fg-muted);
+  z-index: 1;
+}
+
+.dd-band__mark:focus-visible {
+  outline: 2px solid var(--dd-focus-ring);
+  outline-offset: 2px;
+}
+
+.dd-band__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+.dd-band__counter {
+  flex: none;
+  min-width: 52px;
+  padding: 0 4px;
+  text-align: center;
+  font-size: var(--dd-fs-small);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--dd-fg-muted);
+}
+
+/* ── 판 헤더 ────────────────────────────────────────────── */
+
+.dd-pane-headers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: var(--dd-paneheader-h);
+  background: var(--dd-bg-elev);
+  border-bottom: 1px solid var(--dd-border);
+  user-select: none;
+}
+
+.dd-pane-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 0 6px 0 12px;
+}
+
+.dd-pane-header--left {
+  border-right: 1px solid var(--dd-border);
+}
+
+.dd-pane-header--right {
+  padding-left: 12px;
+}
+
+.dd-pane-header__name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--dd-fs-small);
+  color: var(--dd-fg);
+}
+
+.dd-pane-header__dirty {
+  flex: none;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--dd-fg);
+}
+
+.dd-pane-header__badge {
+  flex: none;
+  padding: 2px 7px;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  color: var(--dd-fg-muted);
+  border: 1px solid var(--dd-border-strong);
+  border-radius: 999px;
+}
+
+.dd-pane-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: none;
+  margin-left: auto;
+}
+
+.dd-pane-header__actions .dd-btn {
+  height: 22px;
+  padding: 0 8px;
+  font-size: var(--dd-fs-small);
+  border-color: transparent;
+}
+
+.dd-pane-header__actions .dd-btn--icon {
+  width: 22px;
+  padding: 0;
+}
+
+/* ── 에디터 영역 ────────────────────────────────────────── */
+
+.dd-editor-area {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--dd-bg);
+}
+
+.dd-diff-host {
+  position: absolute;
+  inset: 0;
+}
+
+/* ── 청크 병합 버튼 오버레이 ─────────────────────────────── */
+
+.dd-chunk-strip {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* 좌표는 프론트의 쌍 래퍼 div(inline style)가 소유 — 여기서 position을 잡으면 flex 쌍이 겹친다 */
+.dd-chunk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  pointer-events: auto;
+  cursor: pointer;
+  user-select: none;
+  /* Monaco DOM 안쪽에 붙어도 모노 폰트를 상속받지 않도록 고정 */
+  font-family: var(--dd-font-ui);
+  font-size: 12px;
+  line-height: 1;
+  color: var(--dd-chunkbtn-fg);
+  background: var(--dd-chunkbtn-bg);
+  border: 1px solid var(--dd-chunkbtn-border);
+  border-radius: 50%;
+  box-shadow: var(--dd-shadow);
+  transition: background-color 0.1s ease, border-color 0.1s ease, color 0.1s ease,
+    transform 0.06s ease;
+}
+
+.dd-chunk-btn:hover {
+  background: var(--dd-chunkbtn-hover-bg);
+  border-color: var(--dd-chunkbtn-hover-bg);
+  color: var(--dd-accent-fg);
+}
+
+.dd-chunk-btn:active {
+  transform: scale(0.92);
+}
+
+.dd-chunk-btn:focus-visible {
+  outline: 2px solid var(--dd-focus-ring);
+  outline-offset: 1px;
+}
+
+.dd-chunk-btn--ltr,
+.dd-chunk-btn--rtl {
+  font-weight: 600; /* 화살표 글리프 가독성 */
+}
+
+/* ── 상태줄 ─────────────────────────────────────────────── */
+
+.dd-statusbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  background: var(--dd-bg-elev);
+  border-top: 1px solid var(--dd-border);
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: var(--dd-fs-small);
+  color: var(--dd-fg-muted);
+  user-select: none;
+}
+
+.dd-statusbar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+.dd-statusbar__sep {
+  flex: none;
+  width: 1px;
+  height: 12px;
+  background: var(--dd-border-strong);
+}
+
+/* 비교 상태 점 — 밴드 판정과 같은 semantic 색 */
+.dd-statusbar__dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dd-fg-faint);
+}
+
+.dd-statusbar__dot.is-same {
+  background: var(--dd-added);
+}
+
+.dd-statusbar__dot.is-diff {
+  background: var(--dd-modified);
+}
+
+.dd-statusbar__dot.is-empty {
+  background: var(--dd-fg-faint);
+}
+
+/* ── 드롭 오버레이 ──────────────────────────────────────── */
+
+.dd-drop-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--dd-drop-overlay-border);
+  background: var(--dd-drop-overlay-bg);
+  border-radius: var(--dd-radius);
+  outline: 2px dashed var(--dd-drop-overlay-border);
+  outline-offset: -6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.dd-drop-overlay--left {
+  left: 0;
+}
+
+.dd-drop-overlay--right {
+  right: 0;
+}
+
+.dd-drop-overlay.is-visible {
+  opacity: 1;
+}
+
+/* ── 빈 화면 안내 ───────────────────────────────────────── */
+
+.dd-empty-hint {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: var(--dd-fg-muted);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── 커스텀 스크롤바 (webkit) ────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--dd-scrollbar-thumb);
+  border: 2px solid transparent;
+  border-radius: 5px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #7e8492a6;
+}
+
+:root[data-theme='light'] ::-webkit-scrollbar-thumb:hover {
+  background-color: #8c959fa6;
+}
+
+/* ── 접근성: 모션 축소 ──────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .dd-btn,
+  .dd-select,
+  .dd-chunk-btn,
+  .dd-band__mark,
+  .dd-drop-overlay {
+    transition: none;
+  }
+
+  .dd-chunk-btn:active {
+    transform: none;
+  }
+}

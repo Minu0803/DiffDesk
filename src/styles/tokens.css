@@ -1,0 +1,101 @@
+/* DiffDesk 디자인 토큰 — UI-SPEC §3 계약. 색 팔레트는 monacoThemes.ts와 같은 계열 유지.
+   시안 B "스테이터스 밴드 + 인디고 소프트": 액센트 인디고, 다크 베이스 블루블랙.
+   다크 --dd-bg(#17181d)는 백엔드 창 backgroundColor와 동기 계약 — 단독 변경 금지 */
+
+:root {
+  --dd-font-ui: 'Segoe UI', 'Malgun Gothic', system-ui, sans-serif;
+  /* monacoThemes.ts의 MONO_FONT_STACK과 반드시 동일 값 */
+  --dd-font-mono: 'Cascadia Code', 'D2Coding', Consolas, 'Courier New', monospace;
+  --dd-fs-ui: 13px;
+  --dd-fs-small: 12px;
+
+  --dd-toolbar-h: 42px;
+  --dd-band-h: 32px;
+  --dd-paneheader-h: 30px;
+  --dd-statusbar-h: 26px;
+  --dd-radius: 10px;
+  --dd-radius-sm: 6px;
+  --dd-gap: 8px;
+}
+
+/* 다크가 기본 무드 — data-theme가 아직 안 붙은 첫 프레임에도 다크로 뜨도록 :root에 병기 */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --dd-bg: #17181d;
+  --dd-bg-elev: #1e2027;
+  --dd-bg-hover: #262a34;
+  --dd-bg-active: #303543;
+
+  --dd-fg: #d7dae0;
+  --dd-fg-muted: #9aa1ad;
+  --dd-fg-faint: #6f7480;
+
+  --dd-border: #33363f;
+  --dd-border-strong: #4d5260;
+
+  --dd-accent: #8b93ff;
+  --dd-accent-hover: #7a82f5;
+  /* 밝은 인디고 채움 위에는 흰 글자가 대비 미달 — 어두운 잉크로 반전(6.1:1) */
+  --dd-accent-fg: #1b1d2a;
+  --dd-focus-ring: #8b93ff;
+
+  --dd-danger: #f26666;
+  --dd-added: #57ab5a;
+  --dd-added-bg: #1c3428;
+  --dd-removed: #ec6a5e;
+  --dd-removed-bg: #3d2426;
+  --dd-modified: #e0b13e;
+  --dd-modified-bg: #3a3320;
+
+  --dd-chunkbtn-bg: #2c303b;
+  --dd-chunkbtn-fg: #d7dae0;
+  --dd-chunkbtn-border: #646b7d;
+  --dd-chunkbtn-hover-bg: #7a82f5;
+
+  --dd-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  --dd-scrollbar-thumb: #7e849266;
+  --dd-drop-overlay-bg: #8b93ff21;
+  --dd-drop-overlay-border: #8b93ff;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --dd-bg: #ffffff;
+  --dd-bg-elev: #f8f9fc;
+  --dd-bg-hover: #eef0f7;
+  --dd-bg-active: #e2e5f1;
+
+  --dd-fg: #1f2328;
+  --dd-fg-muted: #59636e;
+  --dd-fg-faint: #8c959f;
+
+  --dd-border: #dcdfea;
+  --dd-border-strong: #a9b0c6;
+
+  --dd-accent: #5558ce;
+  --dd-accent-hover: #4649bd;
+  --dd-accent-fg: #ffffff;
+  --dd-focus-ring: #5558ce;
+
+  --dd-danger: #cf222e;
+  --dd-added: #1a7f37;
+  --dd-added-bg: #dafbe1;
+  --dd-removed: #cf222e;
+  --dd-removed-bg: #ffebe9;
+  --dd-modified: #9a6700;
+  /* #fff3c4 대비 4.37:1(AA 미달) → #fff8c5로 4.52:1 확보 */
+  --dd-modified-bg: #fff8c5;
+
+  --dd-chunkbtn-bg: #ffffff;
+  --dd-chunkbtn-fg: #3d4650;
+  --dd-chunkbtn-border: #a9b0c6;
+  --dd-chunkbtn-hover-bg: #5558ce;
+
+  --dd-shadow: 0 1px 4px rgba(31, 35, 40, 0.2);
+  --dd-scrollbar-thumb: #8c959f66;
+  --dd-drop-overlay-bg: #5558ce14;
+  --dd-drop-overlay-border: #5558ce;
+}

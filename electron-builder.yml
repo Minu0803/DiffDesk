@@ -1,0 +1,19 @@
+appId: com.minwoo.diffdesk
+productName: DiffDesk
+directories:
+  output: release
+files:
+  - dist/**
+  - dist-electron/**
+npmRebuild: false
+win:
+  icon: build/icon.ico
+  target:
+    - target: dir
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+portable:
+  artifactName: DiffDesk-portable.exe
