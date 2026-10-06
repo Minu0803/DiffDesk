@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DiffDesk</title>
+    <script>
+      const bootBackground = window.api && window.api.initialBackground;
+      if (/^#[0-9a-f]{6}$/i.test(bootBackground || '')) document.documentElement.style.setProperty('--dd-bg', bootBackground);
+    </script>
   </head>
   <body>
     <div id="root"></div>

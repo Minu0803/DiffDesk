@@ -16,6 +16,11 @@
   --dd-radius: 10px;
   --dd-radius-sm: 6px;
   --dd-gap: 8px;
+  --dd-merge-lane: 64px;
+  --dd-left-pane: calc(50% - 64px);
+  --dd-accent-soft: color-mix(in srgb, var(--dd-accent) 15%, var(--dd-bg-elev));
+  --dd-rim: var(--dd-border-strong);
+  --dd-glow: color-mix(in srgb, var(--dd-accent) 12%, transparent);
 }
 
 /* 다크가 기본 무드 — data-theme가 아직 안 붙은 첫 프레임에도 다크로 뜨도록 :root에 병기 */

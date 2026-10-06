@@ -1,19 +1,23 @@
 import * as monaco from 'monaco-editor'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { DEFAULT_SETTINGS } from '../shared/ipc'
-import type { FilePayload, MenuCommand, PaneSide, SaveRequest, Settings, ThemeSetting } from '../shared/ipc'
-import { MONACO_THEME_DARK, MONACO_THEME_LIGHT } from './themes/monacoThemes'
+import type { FilePayload, MenuCommand, PaneSide, SaveRequest, Settings } from '../shared/ipc'
+import { monacoThemeName } from './themes/monacoThemes'
+import { applyPalette } from './themes/applyPalette'
+import { THEME_PRESET_IDS, themePatchFor, themeSelection } from '../shared/themes'
+import type { ThemeSelection } from '../shared/themes'
 import { api, hasNativeApi } from './lib/api'
 import { emptyPaneMeta } from './lib/pane'
 import type { PaneMeta } from './lib/pane'
 import { detectLanguage } from './lib/langDetect'
 import { applyChunk, copyAll, replaceAll, swapValues } from './lib/mergeChunks'
 import type { MergeDirection } from './lib/mergeChunks'
-import { useDiffEditor } from './hooks/useDiffEditor'
+import { useDiffEditor, reserveMergeLane } from './hooks/useDiffEditor'
+import { chunkKey, isCurrentChunk, packChunkButtons, visibleChunkAnchor, MERGE_LANE_WIDTH } from './lib/chunkLayout'
 import { Toolbar } from './components/Toolbar'
 import { PaneHeader } from './components/PaneHeader'
 import { DiffHost } from './components/DiffHost'
-import type { ChunkButtonPos } from './components/ChunkStrip'
+import type { ChunkButtonPos, MergeReceipt } from './components/ChunkStrip'
 import { StatusBar } from './components/StatusBar'
 import { StatusBand } from './components/StatusBand'
 import type { BandCounts, BandMarker } from './components/StatusBand'
@@ -37,16 +41,16 @@ function alertError(err: unknown): void {
   window.alert(err instanceof Error ? err.message : String(err))
 }
 
-const THEME_CYCLE: ThemeSetting[] = ['system', 'light', 'dark']
+const THEME_CYCLE: ThemeSelection[] = ['system', 'light', 'dark', ...THEME_PRESET_IDS]
 
-export default function App() {
+export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSettings?: Settings }) {
   const hostRef = useRef<HTMLDivElement>(null)
   const areaRef = useRef<HTMLDivElement>(null)
   const bundle = useDiffEditor(hostRef)
   const bundleRef = useRef(bundle)
   bundleRef.current = bundle
 
-  const [settings, setSettings] = useState<Settings>({ ...DEFAULT_SETTINGS })
+  const [settings, setSettings] = useState<Settings>({ ...DEFAULT_SETTINGS, ...initialSettings })
   const settingsRef = useRef(settings)
 
   const [metas, setMetas] = useState<PaneMetas>({ left: emptyPaneMeta(), right: emptyPaneMeta() })
@@ -67,9 +71,21 @@ export default function App() {
   const changesRef = useRef<readonly monaco.editor.ILineChange[]>([])
   // 저장/로드 시점 getAlternativeVersionId 스냅샷. -1 = 일치 불가 센티널(스왑으로 이력 단절 시)
   const savedIdsRef = useRef<{ left: number; right: number }>({ left: -1, right: -1 })
+  const undoBaseIdsRef = useRef({ left: -1, right: -1 })
   const focusedSideRef = useRef<PaneSide>('left')
-  // 병합 클릭 → 디프 재계산 완료 전 연타가 stale change를 적용하는 것 방지(시간 상한으로 교착 방지)
-  const mergeBusyUntilRef = useRef(0)
+  const diffVersionsRef = useRef({ original: -1, modified: -1 })
+  const mergeBusyRef = useRef(true)
+  const [diffPending, setDiffPending] = useState(true)
+  const lastWhitespaceRef = useRef(initialSettings.ignoreTrimWhitespace)
+  const [laneLeft, setLaneLeft] = useState(0)
+  const [activeSide, setActiveSide] = useState<PaneSide>('left')
+  const [canUndo, setCanUndo] = useState({ left: false, right: false })
+  const [receipt, setReceipt] = useState<MergeReceipt | null>(null)
+  const receiptTimerRef = useRef<number>()
+  const [feedback, setFeedback] = useState('')
+  const highlightRef = useRef<{ left: monaco.editor.IEditorDecorationsCollection; right: monaco.editor.IEditorDecorationsCollection } | null>(null)
+  const flashRef = useRef<{ left: monaco.editor.IEditorDecorationsCollection; right: monaco.editor.IEditorDecorationsCollection } | null>(null)
+  const flashTimerRef = useRef<{left?:number;right?:number}>({})
   const rafRef = useRef(0)
 
   const [chunks, setChunks] = useState<ChunkButtonPos[]>([])
@@ -88,7 +104,6 @@ export default function App() {
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])
-  const effectiveTheme: 'light' | 'dark' = settings.theme === 'system' ? (systemDark ? 'dark' : 'light') : settings.theme
 
   const patchQueueRef = useRef<Partial<Settings>>({})
   const patchTimerRef = useRef<number>()
@@ -115,22 +130,37 @@ export default function App() {
   const computeChunks = useCallback((): ChunkButtonPos[] => {
     const b = bundleRef.current
     const area = areaRef.current
-    if (!b || !area || !settingsRef.current.renderSideBySide) return []
+    if (!b || b.original.isDisposed() || b.modified.isDisposed() || !area || !settingsRef.current.renderSideBySide) return []
     const orig = b.editor.getOriginalEditor()
     const mod = b.editor.getModifiedEditor()
     const origNode = orig.getDomNode()
     const modNode = mod.getDomNode()
     if (!origNode || !modNode) return []
     const areaRect = area.getBoundingClientRect()
-    const x = origNode.getBoundingClientRect().right - areaRect.left
-    const modTop = modNode.getBoundingClientRect().top - areaRect.top
-    const scrollTop = mod.getScrollTop()
-    const lineCount = b.modified.getLineCount()
+    const left = origNode.getBoundingClientRect().right - areaRect.left - MERGE_LANE_WIDTH
+    if (orig.getLayoutInfo().verticalScrollbarWidth !== MERGE_LANE_WIDTH) return []
+    setLaneLeft(left)
+    ;(area.closest('.dd-app') as HTMLElement | null)?.style.setProperty('--dd-left-pane',left+'px')
     const height = areaRect.height
-    return changesRef.current.map((c, i) => {
-      const line = Math.min(Math.max(c.modifiedStartLineNumber, 1), lineCount)
-      const y = modTop + mod.getTopForLineNumber(line) - scrollTop
-      return { key: i, x, y, visible: y >= 0 && y <= height }
+    const candidates = changesRef.current.map(c=>{
+      const ed=c.modifiedEndLineNumber===0?orig:mod
+      const rawLine=c.modifiedEndLineNumber===0?c.originalStartLineNumber:c.modifiedStartLineNumber
+      const line=Math.min(Math.max(rawLine,1),ed.getModel()!.getLineCount())
+      const y=ed.getDomNode()!.getBoundingClientRect().top-areaRect.top+ed.getTopForLineNumber(line)-ed.getScrollTop()
+      const end=Math.min(Math.max(c.modifiedEndLineNumber===0?c.originalEndLineNumber:c.modifiedEndLineNumber,line),ed.getModel()!.getLineCount())
+      const bottom=ed.getDomNode()!.getBoundingClientRect().top-areaRect.top+ed.getBottomForLineNumber(end)-ed.getScrollTop()
+      return { change:c, anchorY:visibleChunkAnchor(y,bottom,height) }
+    }).filter((c):c is {change:monaco.editor.ILineChange;anchorY:number}=>c.anchorY!==null).sort((a,b)=>a.anchorY-b.anchorY)
+    const packed=packChunkButtons(candidates.map(c=>c.anchorY),height)
+    const span=(start:number,end:number)=>end===start?`${start}행`:`${start}~${end}행`
+    return candidates.map(({change:c,anchorY},i)=>{
+      const effect=(dir:MergeDirection)=>{
+        const ltr=dir==='ltr', source=ltr?'왼쪽':'오른쪽', target=ltr?'오른쪽':'왼쪽'
+        const ss=ltr?c.originalStartLineNumber:c.modifiedStartLineNumber,se=ltr?c.originalEndLineNumber:c.modifiedEndLineNumber
+        const ts=ltr?c.modifiedStartLineNumber:c.originalStartLineNumber,te=ltr?c.modifiedEndLineNumber:c.originalEndLineNumber
+        return se===0?`${target} ${span(ts,te)} 삭제`:te===0?`${source} ${span(ss,se)}을 ${target}에 삽입`:`${source} ${span(ss,se)}으로 ${target} ${span(ts,te)} 교체`
+      }
+      return {key:chunkKey(c),change:c,originalVersion:diffVersionsRef.current.original,modifiedVersion:diffVersionsRef.current.modified,x:left+MERGE_LANE_WIDTH/2,y:packed[i].top,anchorY,height:packed[i].height,disabled:mergeBusyRef.current,labels:{ltr:effect('ltr'),rtl:effect('rtl')}}
     })
   }, [])
 
@@ -144,7 +174,7 @@ export default function App() {
 
   function modelOf(side: PaneSide): monaco.editor.ITextModel | null {
     const b = bundleRef.current
-    if (!b) return null
+    if (!b || b.original.isDisposed() || b.modified.isDisposed()) return null
     return side === 'left' ? b.original : b.modified
   }
 
@@ -153,6 +183,8 @@ export default function App() {
     if (!model) return
     // 파일 로드는 새 문서 기준선: setValue로 undo 이력도 리셋
     model.setValue(p.content)
+    undoBaseIdsRef.current[side] = model.getAlternativeVersionId()
+    setCanUndo(prev=>({...prev,[side]:false}))
     savedIdsRef.current[side] = model.getAlternativeVersionId()
     commitMetas(
       withMeta(metasRef.current, side, {
@@ -250,17 +282,52 @@ export default function App() {
     if (!b) return
     if (dir === 'ltr') copyAll(b.original, b.modified)
     else copyAll(b.modified, b.original)
+    const target = dir === 'ltr' ? 'right' : 'left'
+    const editor = target === 'right' ? b.editor.getModifiedEditor() : b.editor.getOriginalEditor()
+    editor.focus()
+    setFeedback((target === 'right' ? '오른쪽' : '왼쪽') + '에 전체 적용')
   }
 
-  function applyChunkAt(index: number, dir: MergeDirection): void {
+  function applyChunkAt(request: ChunkButtonPos, dir: MergeDirection): void {
     const b = bundleRef.current
     if (!b) return
-    if (Date.now() < mergeBusyUntilRef.current) return
-    const change = changesRef.current[index]
-    if (!change) return
+    if (mergeBusyRef.current || !isCurrentChunk(request,b.original.getVersionId(),b.modified.getVersionId(),changesRef.current)) {setFeedback('차이를 다시 계산하고 있습니다');return}
+    const change = request.change
     if (applyChunk(b.original, b.modified, change, dir)) {
-      mergeBusyUntilRef.current = Date.now() + 400
+      const target=dir==='ltr'?'right':'left'
+      const ed=target==='right'?b.editor.getModifiedEditor():b.editor.getOriginalEditor()
+      ed.focus()
+      setFeedback((target==='right'?'오른쪽':'왼쪽')+'에 블록 적용')
+      setReceipt({x:request.x,y:request.y,target:dir})
+      window.clearTimeout(receiptTimerRef.current)
+      receiptTimerRef.current=window.setTimeout(()=>setReceipt(null),800)
+      highlightRef.current?.left.clear();highlightRef.current?.right.clear()
+      const model=target==='right'?b.modified:b.original
+      const start=Math.max(1,Math.min(target==='right'?change.modifiedStartLineNumber:change.originalStartLineNumber,model.getLineCount()))
+      const sourceLines=dir==='ltr'?Math.max(1,change.originalEndLineNumber-change.originalStartLineNumber+1):Math.max(1,change.modifiedEndLineNumber-change.modifiedStartLineNumber+1)
+      const end=Math.min(model.getLineCount(),start+sourceLines-1)
+      flashRef.current?.[target].set([{range:new monaco.Range(start,1,end,model.getLineMaxColumn(end)),options:{className:'dd-merge-flash',isWholeLine:true}}])
+      window.clearTimeout(flashTimerRef.current[target])
+      flashTimerRef.current[target]=window.setTimeout(()=>flashRef.current?.[target].clear(),360)
     }
+  }
+
+  function hoverChunk(request: ChunkButtonPos | null, dir?: MergeDirection): void {
+    const h=highlightRef.current,b=bundleRef.current
+    if(!h||!b)return
+    h.left.clear();h.right.clear()
+    if(!request||!dir||mergeBusyRef.current)return
+    const target=dir==='ltr'?'right':'left', c=request.change,model=target==='right'?b.modified:b.original
+    const start=Math.max(1,Math.min(target==='right'?c.modifiedStartLineNumber:c.originalStartLineNumber,model.getLineCount()))
+    const end=Math.max(start,Math.min(target==='right'?c.modifiedEndLineNumber:c.originalEndLineNumber,model.getLineCount()))
+    h[target].set([{range:new monaco.Range(start,1,end,model.getLineMaxColumn(end)),options:{isWholeLine:true,className:'dd-merge-hover'}}])
+  }
+
+  function undoFocused(): void {
+    const b=bundleRef.current
+    if(!b)return
+    const ed=focusedSideRef.current==='left'?b.editor.getOriginalEditor():b.editor.getModifiedEditor()
+    ed.trigger('dd-toolbar','undo',null);ed.focus();setFeedback((focusedSideRef.current==='left'?'왼쪽':'오른쪽')+' 실행 취소')
   }
 
   function navigateTo(rawIndex: number): void {
@@ -301,9 +368,9 @@ export default function App() {
     updateSettings({ wordWrap: !settingsRef.current.wordWrap })
   }
   function cycleTheme(): void {
-    const cur = settingsRef.current.theme
+    const cur = themeSelection(settingsRef.current)
     const next = THEME_CYCLE[(THEME_CYCLE.indexOf(cur) + 1) % THEME_CYCLE.length]
-    updateSettings({ theme: next })
+    updateSettings(themePatchFor(next))
   }
 
   function handleMenu(cmd: MenuCommand): void {
@@ -362,7 +429,7 @@ export default function App() {
 
   // Monaco 리스너 배선
   useEffect(() => {
-    if (!bundle) return
+    if (!bundle || bundle.original.isDisposed() || bundle.modified.isDisposed()) return
     const { editor, original, modified } = bundle
     const orig = editor.getOriginalEditor()
     const mod = editor.getModifiedEditor()
@@ -370,11 +437,15 @@ export default function App() {
       left: original.getAlternativeVersionId(),
       right: modified.getAlternativeVersionId()
     }
+    undoBaseIdsRef.current = {...savedIdsRef.current}
     const disposables: monaco.IDisposable[] = []
+    highlightRef.current={left:orig.createDecorationsCollection(),right:mod.createDecorationsCollection()}
+    flashRef.current={left:orig.createDecorationsCollection(),right:mod.createDecorationsCollection()}
 
     const refreshDocState = () => {
       setLineCounts({ left: original.getLineCount(), right: modified.getLineCount() })
       setBothEmpty(original.getValueLength() === 0 && modified.getValueLength() === 0)
+      setCanUndo({left:original.getAlternativeVersionId()!==undoBaseIdsRef.current.left,right:modified.getAlternativeVersionId()!==undoBaseIdsRef.current.right})
       const cur = metasRef.current
       const leftDirty = original.getAlternativeVersionId() !== savedIdsRef.current.left
       const rightDirty = modified.getAlternativeVersionId() !== savedIdsRef.current.right
@@ -382,14 +453,27 @@ export default function App() {
         commitMetas({ left: { ...cur.left, dirty: leftDirty }, right: { ...cur.right, dirty: rightDirty } })
       }
     }
-    disposables.push(original.onDidChangeContent(refreshDocState))
-    disposables.push(modified.onDidChangeContent(refreshDocState))
+    const contentChanged = () => {
+      mergeBusyRef.current=true
+      setDiffPending(true)
+      setChunks(previous=>previous.map(c=>({...c,disabled:true})))
+      highlightRef.current?.left.clear();highlightRef.current?.right.clear()
+      refreshDocState()
+    }
+    disposables.push(original.onDidChangeContent(contentChanged))
+    disposables.push(modified.onDidChangeContent(contentChanged))
 
     disposables.push(
       editor.onDidUpdateDiff(() => {
-        const changes = editor.getLineChanges() ?? []
+        const versions=bundle.diffSession.getVersions()
+        if(!versions)return
+        const result = editor.getLineChanges()
+        if(result===null)return
+        const changes = result
         changesRef.current = changes
-        mergeBusyUntilRef.current = 0
+        diffVersionsRef.current=versions
+        mergeBusyRef.current=false
+        setDiffPending(false)
         const count = changes.length
         const index = count === 0 ? -1 : Math.min(Math.max(diffRef.current.index, 0), count - 1)
         commitDiff({ count, index })
@@ -410,6 +494,7 @@ export default function App() {
     )
 
     disposables.push(mod.onDidScrollChange(scheduleChunks))
+    disposables.push(orig.onDidScrollChange(scheduleChunks))
     disposables.push(orig.onDidLayoutChange(scheduleChunks))
     disposables.push(mod.onDidLayoutChange(scheduleChunks))
     const onResize = () => scheduleChunks()
@@ -418,6 +503,7 @@ export default function App() {
     disposables.push(
       orig.onDidFocusEditorWidget(() => {
         focusedSideRef.current = 'left'
+        setActiveSide('left')
         const pos = orig.getPosition()
         if (pos) setCursor({ line: pos.lineNumber, col: pos.column })
       })
@@ -425,6 +511,7 @@ export default function App() {
     disposables.push(
       mod.onDidFocusEditorWidget(() => {
         focusedSideRef.current = 'right'
+        setActiveSide('right')
         const pos = mod.getPosition()
         if (pos) setCursor({ line: pos.lineNumber, col: pos.column })
       })
@@ -446,6 +533,10 @@ export default function App() {
     return () => {
       window.removeEventListener('resize', onResize)
       for (const d of disposables) d.dispose()
+      highlightRef.current?.left.clear();highlightRef.current?.right.clear();highlightRef.current=null
+      window.clearTimeout(receiptTimerRef.current)
+      window.clearTimeout(flashTimerRef.current.left);window.clearTimeout(flashTimerRef.current.right)
+      flashRef.current?.left.clear();flashRef.current?.right.clear();flashRef.current=null
       if (rafRef.current) {
         window.cancelAnimationFrame(rafRef.current)
         rafRef.current = 0
@@ -455,7 +546,7 @@ export default function App() {
 
   // 부팅: 설정 → QA 시드 또는 CLI 인자, 메뉴/두번째 인스턴스 구독
   useEffect(() => {
-    if (!bundle) return
+    if (!bundle || bundle.original.isDisposed() || bundle.modified.isDisposed()) return
     void (async () => {
       try {
         const stored = await api.getSettings()
@@ -509,13 +600,15 @@ export default function App() {
 
   // 테마 적용: <html data-theme> + Monaco 테마 동기화
   useEffect(() => {
-    document.documentElement.dataset.theme = effectiveTheme
-    monaco.editor.setTheme(effectiveTheme === 'dark' ? MONACO_THEME_DARK : MONACO_THEME_LIGHT)
-  }, [effectiveTheme])
+    const p=applyPalette(settings,systemDark)
+    monaco.editor.setTheme(monacoThemeName(settings,p.scheme))
+  }, [settings.theme,settings.themePreset,systemDark])
 
   // 설정 → 에디터 옵션 반영
   useEffect(() => {
-    if (!bundle) return
+    if (!bundle || bundle.original.isDisposed() || bundle.modified.isDisposed()) return
+    const whitespaceChanged=lastWhitespaceRef.current!==settings.ignoreTrimWhitespace
+    if(whitespaceChanged){mergeBusyRef.current=true;setDiffPending(true);setChunks(prev=>prev.map(c=>({...c,disabled:true})));lastWhitespaceRef.current=settings.ignoreTrimWhitespace;bundle.diffSession.invalidate()}
     bundle.editor.updateOptions({
       renderSideBySide: settings.renderSideBySide,
       ignoreTrimWhitespace: settings.ignoreTrimWhitespace,
@@ -523,12 +616,13 @@ export default function App() {
       diffWordWrap: settings.wordWrap ? 'on' : 'off',
       fontSize: settings.fontSize
     })
+    reserveMergeLane(bundle.editor,settings.renderSideBySide)
     scheduleChunks()
   }, [bundle, settings.renderSideBySide, settings.ignoreTrimWhitespace, settings.wordWrap, settings.fontSize, scheduleChunks])
 
   // 언어: 수동 선택 우선, 자동('')이면 왼쪽 → 오른쪽 파일명 순으로 감지. 양판 공통 적용
   useEffect(() => {
-    if (!bundle) return
+    if (!bundle || bundle.original.isDisposed() || bundle.modified.isDisposed()) return
     const auto = detectLanguage(metas.left.name) ?? detectLanguage(metas.right.name) ?? 'plaintext'
     const lang = settings.language || auto
     monaco.editor.setModelLanguage(bundle.original, lang)
@@ -639,14 +733,14 @@ export default function App() {
   }, [])
 
   return (
-    <div className="dd-app">
+    <div className="dd-app" data-side-by-side={settings.renderSideBySide}>
       <Toolbar
         diffCount={diff.count}
         language={settings.language}
         renderSideBySide={settings.renderSideBySide}
         ignoreTrimWhitespace={settings.ignoreTrimWhitespace}
         wordWrap={settings.wordWrap}
-        theme={settings.theme}
+        theme={themeSelection(settings)}
         onCopyAllLtr={() => copyAllTo('ltr')}
         onCopyAllRtl={() => copyAllTo('rtl')}
         onSwap={swapPanes}
@@ -655,9 +749,10 @@ export default function App() {
         onToggleView={toggleView}
         onToggleWhitespace={toggleWhitespace}
         onToggleWrap={toggleWrap}
-        onCycleTheme={cycleTheme}
+        onThemeChange={value=>updateSettings(themePatchFor(value))}
       />
       <StatusBand
+        pending={diffPending}
         bothEmpty={bothEmpty}
         diffCount={diff.count}
         diffIndex={diff.index}
@@ -672,6 +767,7 @@ export default function App() {
       <div className="dd-pane-headers">
         <PaneHeader
           side="left"
+          active={activeSide==='left'}
           meta={metas.left}
           fileOpsEnabled={hasNativeApi}
           onOpen={() => void openInto('left')}
@@ -679,8 +775,10 @@ export default function App() {
           onPaste={() => void pastePane('left')}
           onClearPane={() => clearPane('left')}
         />
+        {settings.renderSideBySide && <div className="dd-gutter-heading">부분 병합</div>}
         <PaneHeader
           side="right"
+          active={activeSide==='right'}
           meta={metas.right}
           fileOpsEnabled={hasNativeApi}
           onOpen={() => void openInto('right')}
@@ -693,8 +791,11 @@ export default function App() {
         hostRef={hostRef}
         areaRef={areaRef}
         chunks={chunks}
-        stripHidden={!settings.renderSideBySide || diff.count === 0}
+        stripHidden={!settings.renderSideBySide}
         onApplyChunk={applyChunkAt}
+        onHoverChunk={hoverChunk}
+        laneLeft={laneLeft}
+        receipt={receipt}
         showEmptyHint={bothEmpty}
         dropSide={dropSide}
       />
@@ -709,6 +810,10 @@ export default function App() {
         rightEncoding={metas.right.encoding}
         cursorLine={cursor.line}
         cursorCol={cursor.col}
+        feedback={feedback}
+        activeSide={activeSide}
+        canUndo={canUndo[activeSide]}
+        onUndo={undoFocused}
       />
     </div>
   )

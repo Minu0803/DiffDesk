@@ -1,0 +1,44 @@
+{
+  "deep-dark": {
+    "minimum": 4.868,
+    "foreground": "comment",
+    "background": "selection",
+    "lineNumberOnCode": 5.585,
+    "mutedOnChrome": 7.222
+  },
+  "navy-dark": {
+    "minimum": 5.205,
+    "foreground": "keyword",
+    "background": "selection",
+    "lineNumberOnCode": 7.708,
+    "mutedOnChrome": 7.266
+  },
+  "one-dark": {
+    "minimum": 4.901,
+    "foreground": "keyword",
+    "background": "word-add",
+    "lineNumberOnCode": 5.064,
+    "mutedOnChrome": 6.436
+  },
+  "dracula": {
+    "minimum": 4.706,
+    "foreground": "keyword",
+    "background": "word-add",
+    "lineNumberOnCode": 6.079,
+    "mutedOnChrome": 7.65
+  },
+  "nord": {
+    "minimum": 4.843,
+    "foreground": "keyword",
+    "background": "selection",
+    "lineNumberOnCode": 5.699,
+    "mutedOnChrome": 7.051
+  },
+  "github-light": {
+    "minimum": 4.985,
+    "foreground": "comment",
+    "background": "word-del",
+    "lineNumberOnCode": 6.114,
+    "mutedOnChrome": 5.743
+  }
+}

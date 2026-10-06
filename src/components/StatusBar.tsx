@@ -1,5 +1,7 @@
 import { encodingLabel } from '../lib/pane'
 import { languageLabel } from '../lib/langDetect'
+import type { PaneSide } from '../../shared/ipc'
+import { MotionButton } from './MotionButton'
 
 interface StatusBarProps {
   leftLines: number
@@ -14,12 +16,18 @@ interface StatusBarProps {
   rightEncoding: string
   cursorLine: number
   cursorCol: number
+  feedback: string
+  activeSide: PaneSide
+  canUndo: boolean
+  onUndo: () => void
 }
 
 export function StatusBar(p: StatusBarProps) {
   const dotState = p.bothEmpty ? 'is-empty' : p.diffCount > 0 ? 'is-diff' : 'is-same'
   return (
     <div className="dd-statusbar">
+      <span className="dd-statusbar__feedback" role="status" aria-live="polite">{p.feedback}</span>
+      <MotionButton type="button" className="dd-btn dd-status-undo" onClick={p.onUndo} disabled={!p.canUndo}>{p.activeSide==='left'?'왼쪽':'오른쪽'} 실행 취소</MotionButton>
       <span className="dd-statusbar__item">
         왼쪽 {p.leftLines}줄 · 오른쪽 {p.rightLines}줄
       </span>

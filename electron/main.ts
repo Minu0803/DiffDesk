@@ -5,6 +5,7 @@ import { IPC_CHANNELS, OpenedArgs, SaveRequest, SaveResult, Settings } from '../
 import { decodeBufferPayload, encodeForSave, readFilePayload } from './encoding'
 import { buildAppMenu } from './menu'
 import { getSettings, getWindowBounds, initSettings, patchSettings, saveWindowBounds } from './settings'
+import { resolveTheme } from '../shared/themes'
 
 const FILE_DIALOG_FILTERS: Electron.FileFilter[] = [
   { name: '모든 파일', extensions: ['*'] },
@@ -97,7 +98,6 @@ function armQaScreenshot(win: BrowserWindow, outPath: string): void {
 }
 
 function createMainWindow(current: Settings): BrowserWindow {
-  const dark = current.theme === 'dark' || (current.theme === 'system' && nativeTheme.shouldUseDarkColors)
   // QA 스크린샷은 창 크기가 결과 픽셀을 좌우하므로 저장 bounds를 무시하고 기본 1440×900 고정
   const saved = qaMode ? undefined : getWindowBounds()
   // 모니터 구성이 바뀌어 화면 밖으로 벗어난 저장 위치는 버린다
@@ -113,7 +113,7 @@ function createMainWindow(current: Settings): BrowserWindow {
     show: false,
     title: 'DiffDesk',
     // 첫 페인트 플래시 방지 — 다크 값은 렌더러 --dd-bg(tokens.css)와 동일해야 한다
-    backgroundColor: dark ? '#17181d' : '#ffffff',
+    backgroundColor: resolveTheme(current, nativeTheme.shouldUseDarkColors).bg,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -196,9 +196,11 @@ function registerIpcHandlers(): void {
   })
 
   ipcMain.handle(IPC_CHANNELS.getSettings, () => getSettings())
+  ipcMain.on(IPC_CHANNELS.bootstrapSettings, (event) => { const settings=getSettings();event.returnValue={settings,background:resolveTheme(settings,nativeTheme.shouldUseDarkColors).bg} })
 
   ipcMain.handle(IPC_CHANNELS.patchSettings, (_event, patch: Partial<Settings>) => {
     patchSettings(patch)
+    mainWindow?.setBackgroundColor(resolveTheme(getSettings(), nativeTheme.shouldUseDarkColors).bg)
   })
 
   ipcMain.handle(IPC_CHANNELS.getOpenedArgs, () => openedArgsPromise)
@@ -233,5 +235,6 @@ if (!gotLock) {
     Menu.setApplicationMenu(buildAppMenu())
     openedArgsPromise = readOpenedArgs(extractFilePaths(process.argv, process.cwd()))
     mainWindow = createMainWindow(current)
+    nativeTheme.on('updated', () => mainWindow?.setBackgroundColor(resolveTheme(getSettings(), nativeTheme.shouldUseDarkColors).bg))
   })
 }

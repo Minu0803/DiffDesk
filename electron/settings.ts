@@ -2,6 +2,7 @@ import { app, nativeTheme } from 'electron'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { DEFAULT_SETTINGS, Settings } from '../shared/ipc'
+import { sanitizeTheme } from '../shared/themes'
 
 // windowBounds는 Settings 계약(shared/ipc.ts) 밖 확장 필드 — 저장 파일에만 두고 렌더러에는 노출하지 않는다
 interface StoredSettings extends Settings {
@@ -18,7 +19,7 @@ function sanitize(raw: unknown): StoredSettings {
   const next: StoredSettings = { ...DEFAULT_SETTINGS }
   if (!raw || typeof raw !== 'object') return next
   const r = raw as Record<string, unknown>
-  if (r.theme === 'system' || r.theme === 'light' || r.theme === 'dark') next.theme = r.theme
+  Object.assign(next, sanitizeTheme(r))
   if (typeof r.renderSideBySide === 'boolean') next.renderSideBySide = r.renderSideBySide
   if (typeof r.ignoreTrimWhitespace === 'boolean') next.ignoreTrimWhitespace = r.ignoreTrimWhitespace
   if (typeof r.wordWrap === 'boolean') next.wordWrap = r.wordWrap
@@ -68,6 +69,7 @@ export function getSettings(): Settings {
   const s = ensure()
   return {
     theme: s.theme,
+    themePreset: s.themePreset,
     renderSideBySide: s.renderSideBySide,
     ignoreTrimWhitespace: s.ignoreTrimWhitespace,
     wordWrap: s.wordWrap,

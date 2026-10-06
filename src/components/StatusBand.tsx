@@ -1,4 +1,4 @@
-// 클래스명은 Designer components.css와의 계약(dd-band*) — 철자 변경 금지
+import { MotionButton } from './MotionButton'
 
 export type BandMarkKind = 'mod' | 'add' | 'del'
 
@@ -15,6 +15,7 @@ export interface BandCounts {
 }
 
 interface StatusBandProps {
+  pending: boolean
   /** 양판 모두 빈 문서 — same보다 우선 판정 */
   bothEmpty: boolean
   diffCount: number
@@ -29,9 +30,9 @@ interface StatusBandProps {
 }
 
 export function StatusBand(p: StatusBandProps) {
-  const state = p.bothEmpty ? 'empty' : p.diffCount === 0 ? 'same' : 'diff'
+  const state = p.bothEmpty || p.pending ? 'empty' : p.diffCount === 0 ? 'same' : 'diff'
   const verdict =
-    state === 'empty' ? '비교할 내용이 없습니다' : state === 'same' ? '✓ 두 문서가 완전히 동일합니다' : `차이 ${p.diffCount}개`
+    p.pending ? '비교 계산 중…' : state === 'empty' ? '비교할 내용이 없습니다' : state === 'same' ? (p.bothEmpty?'비교할 내용이 없습니다':'✓ 차이가 없습니다') : `차이 ${p.diffCount}개`
   return (
     <div className={`dd-band dd-band--${state}`}>
       <span className="dd-band__verdict" aria-live="polite">
@@ -57,7 +58,7 @@ export function StatusBand(p: StatusBandProps) {
             ))}
           </div>
           <div className="dd-band__nav">
-            <button
+            <MotionButton
               type="button"
               className="dd-btn dd-btn--icon"
               title="이전 차이 (Shift+F7)"
@@ -65,8 +66,8 @@ export function StatusBand(p: StatusBandProps) {
               onClick={p.onPrev}
             >
               ▲
-            </button>
-            <button
+            </MotionButton>
+            <MotionButton
               type="button"
               className="dd-btn dd-btn--icon"
               title="다음 차이 (F7)"
@@ -74,7 +75,7 @@ export function StatusBand(p: StatusBandProps) {
               onClick={p.onNext}
             >
               ▼
-            </button>
+            </MotionButton>
             <span className="dd-band__counter" aria-live="polite">
               {p.diffIndex + 1} / {p.diffCount}
             </span>

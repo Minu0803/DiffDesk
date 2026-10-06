@@ -1,5 +1,6 @@
 // 메인(electron/)과 렌더러(src/)가 공유하는 IPC 계약.
-// 양쪽 에이전트는 이 파일을 수정하지 말고 이 타입에 정확히 맞춰 구현한다.
+// 설정 변경은 메인과 렌더러 양쪽에서 함께 검증한다.
+import type { ThemePreset } from './themes'
 
 export type PaneSide = 'left' | 'right'
 
@@ -34,6 +35,7 @@ export type ThemeSetting = 'system' | 'light' | 'dark'
 
 export interface Settings {
   theme: ThemeSetting
+  themePreset: ThemePreset | 'legacy'
   renderSideBySide: boolean
   ignoreTrimWhitespace: boolean
   wordWrap: boolean
@@ -44,6 +46,7 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   theme: 'system',
+  themePreset: 'legacy',
   renderSideBySide: true,
   ignoreTrimWhitespace: false,
   wordWrap: false,
@@ -75,6 +78,9 @@ export interface OpenedArgs {
 }
 
 export interface DiffDeskApi {
+  /** Preload bootstrap, available before the first renderer paint. */
+  initialSettings?: Settings
+  initialBackground?: string
   /** 열기 다이얼로그. 취소 시 null */
   openFile(): Promise<FilePayload | null>
   /** 경로 직접 읽기(드래그&드롭). 실패 시 한국어 메시지로 reject */
@@ -96,6 +102,7 @@ export interface DiffDeskApi {
 }
 
 export const IPC_CHANNELS = {
+  bootstrapSettings: 'dd:bootstrap-settings',
   openFile: 'dd:open-file',
   readPath: 'dd:read-path',
   decodeBuffer: 'dd:decode-buffer',

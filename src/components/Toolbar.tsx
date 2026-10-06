@@ -1,4 +1,6 @@
-import type { ThemeSetting } from '../../shared/ipc'
+import type { ThemeSelection } from '../../shared/themes'
+import { ThemePicker } from './ThemePicker'
+import { MotionButton } from './MotionButton'
 import { LANGUAGE_OPTIONS } from '../lib/langDetect'
 
 interface ToolbarProps {
@@ -8,7 +10,7 @@ interface ToolbarProps {
   renderSideBySide: boolean
   ignoreTrimWhitespace: boolean
   wordWrap: boolean
-  theme: ThemeSetting
+  theme: ThemeSelection
   onCopyAllLtr: () => void
   onCopyAllRtl: () => void
   onSwap: () => void
@@ -17,32 +19,30 @@ interface ToolbarProps {
   onToggleView: () => void
   onToggleWhitespace: () => void
   onToggleWrap: () => void
-  onCycleTheme: () => void
-}
-
-const THEME_LABELS: Record<ThemeSetting, string> = {
-  system: '시스템',
-  light: '라이트',
-  dark: '다크'
+  onThemeChange: (value: ThemeSelection) => void
 }
 
 export function Toolbar(p: ToolbarProps) {
   const noDiff = p.diffCount === 0
   return (
     <div className="dd-toolbar">
+      <span className="dd-brand"><span className="dd-brand__mark" aria-hidden="true">⇄</span>DiffDesk</span>
       <div className="dd-toolbar__group">
-        <button type="button" className="dd-btn" title="모두 왼쪽으로 (Ctrl+Alt+Left)" onClick={p.onCopyAllRtl} disabled={noDiff}>
+        <span className="dd-copy-cluster">
+        <MotionButton type="button" className="dd-btn" title="모두 왼쪽으로 (Ctrl+Alt+Left)" onClick={p.onCopyAllRtl} disabled={noDiff}>
           ← 모두
-        </button>
-        <button type="button" className="dd-btn" title="모두 오른쪽으로 (Ctrl+Alt+Right)" onClick={p.onCopyAllLtr} disabled={noDiff}>
+        </MotionButton>
+        <MotionButton type="button" className="dd-btn" title="모두 오른쪽으로 (Ctrl+Alt+Right)" onClick={p.onCopyAllLtr} disabled={noDiff}>
           모두 →
-        </button>
-        <button type="button" className="dd-btn" title="좌우 바꾸기 (Ctrl+Alt+X)" onClick={p.onSwap}>
+        </MotionButton>
+        </span>
+        <span className="dd-toolbar__divider" />
+        <MotionButton type="button" className="dd-btn" title="좌우 바꾸기 (Ctrl+Alt+X)" onClick={p.onSwap}>
           ⇄ 바꾸기
-        </button>
-        <button type="button" className="dd-btn" title="양쪽 모두 지우기" onClick={p.onClear}>
+        </MotionButton>
+        <MotionButton type="button" className="dd-btn" title="양쪽 모두 지우기" onClick={p.onClear}>
           지우기
-        </button>
+        </MotionButton>
       </div>
       <span className="dd-toolbar__spacer" />
       <div className="dd-toolbar__group">
@@ -60,10 +60,10 @@ export function Toolbar(p: ToolbarProps) {
             </option>
           ))}
         </select>
-        <button type="button" className="dd-btn" title="나란히·한줄 전환 (Ctrl+\)" onClick={p.onToggleView}>
+        <MotionButton type="button" className="dd-btn" title="나란히·한줄 전환 (Ctrl+\)" onClick={p.onToggleView}>
           {p.renderSideBySide ? '나란히 보기' : '한 줄 보기'}
-        </button>
-        <button
+        </MotionButton>
+        <MotionButton
           type="button"
           className={`dd-btn${p.ignoreTrimWhitespace ? ' is-active' : ''}`}
           title="공백 무시"
@@ -71,8 +71,8 @@ export function Toolbar(p: ToolbarProps) {
           onClick={p.onToggleWhitespace}
         >
           공백 무시
-        </button>
-        <button
+        </MotionButton>
+        <MotionButton
           type="button"
           className={`dd-btn${p.wordWrap ? ' is-active' : ''}`}
           title="자동 줄바꿈 (Alt+Z)"
@@ -80,10 +80,8 @@ export function Toolbar(p: ToolbarProps) {
           onClick={p.onToggleWrap}
         >
           자동 줄바꿈
-        </button>
-        <button type="button" className="dd-btn" title="테마 전환 (시스템 → 라이트 → 다크)" onClick={p.onCycleTheme}>
-          테마: {THEME_LABELS[p.theme]}
-        </button>
+        </MotionButton>
+        <ThemePicker value={p.theme} onChange={p.onThemeChange} />
       </div>
     </div>
   )

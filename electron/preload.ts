@@ -11,7 +11,10 @@ import type {
   Settings
 } from '../shared/ipc'
 
+const initialData: { settings: Settings; background: string } = ipcRenderer.sendSync(IPC_CHANNELS.bootstrapSettings)
 const api: DiffDeskApi = {
+  initialSettings: initialData.settings,
+  initialBackground: initialData.background,
   openFile: (): Promise<FilePayload | null> => ipcRenderer.invoke(IPC_CHANNELS.openFile),
 
   readPath: (filePath: string): Promise<FilePayload> => ipcRenderer.invoke(IPC_CHANNELS.readPath, filePath),

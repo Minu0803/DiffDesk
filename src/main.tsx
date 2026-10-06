@@ -12,6 +12,10 @@ import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import { registerMonacoThemes } from './themes/monacoThemes'
+import { monacoThemeName } from './themes/monacoThemes'
+import { applyPalette } from './themes/applyPalette'
+import { api } from './lib/api'
+import { DEFAULT_SETTINGS } from '../shared/ipc'
 
 self.MonacoEnvironment = {
   getWorker(_: unknown, label: string) {
@@ -36,6 +40,8 @@ monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
 registerMonacoThemes(monaco)
 
 // tokens.css가 data-theme 스코프라 첫 페인트 전에 지정(무테마 플래시 방지). 실제 설정값은 App이 재적용
-document.documentElement.dataset.theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+const initialSettings = api.initialSettings || { ...DEFAULT_SETTINGS }
+const palette = applyPalette(initialSettings, window.matchMedia('(prefers-color-scheme: dark)').matches)
+monaco.editor.setTheme(monacoThemeName(initialSettings, palette.scheme))
 
-createRoot(document.getElementById('root')!).render(<App />)
+createRoot(document.getElementById('root')!).render(<App initialSettings={initialSettings} />)
