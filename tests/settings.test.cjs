@@ -16,11 +16,11 @@ test('preset persists across settings reload without putting a preset into nativ
     delete require.cache[modulePath]
     let settings=require(modulePath)
     settings.initSettings()
-    settings.patchSettings({theme:'dark',themePreset:'deep-dark',wordWrap:true})
-    assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'settings.json'),'utf8')).themePreset,'deep-dark')
+    settings.patchSettings({theme:'dark',themePreset:'ink',wordWrap:true})
+    assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'settings.json'),'utf8')).themePreset,'ink')
     delete require.cache[modulePath]
     settings=require(modulePath)
-    assert.equal(settings.initSettings().themePreset,'deep-dark')
+    assert.equal(settings.initSettings().themePreset,'ink')
     assert.equal(settings.getSettings().wordWrap,true)
     assert.equal(source,'dark')
     settings.patchSettings({theme:'system',themePreset:'invalid-preset'})
@@ -29,5 +29,31 @@ test('preset persists across settings reload without putting a preset into nativ
     Module._load=originalLoad
     delete require.cache[modulePath]
     fs.rmSync(dir,{recursive:true,force:true})
+  }
+})
+
+test('old preset settings migrate on load and save under the new ID without losing options', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'diffdesk-theme-migration-'))
+  const originalLoad = Module._load
+  const nativeTheme = { themeSource: 'system' }
+  Module._load = function(name, ...args) { return name === 'electron' ? { app: { getPath: () => dir }, nativeTheme } : originalLoad.call(this, name, ...args) }
+  const modulePath = require.resolve('../electron/settings.ts')
+  try {
+    for (const [oldId, newId, theme] of [['one-dark', 'graphite', 'dark'], ['dracula', 'plum', 'dark'], ['nord', 'mist', 'dark'], ['github-light', 'paper', 'light']]) {
+      fs.writeFileSync(path.join(dir, 'settings.json'), JSON.stringify({ theme, themePreset: oldId, wordWrap: true, fontSize: 16 }))
+      delete require.cache[modulePath]
+      const settings = require(modulePath)
+      assert.equal(settings.initSettings().themePreset, newId)
+      assert.equal(nativeTheme.themeSource, theme)
+      settings.patchSettings({ ignoreTrimWhitespace: true })
+      const saved = JSON.parse(fs.readFileSync(path.join(dir, 'settings.json'), 'utf8'))
+      assert.equal(saved.themePreset, newId)
+      assert.equal(saved.wordWrap, true)
+      assert.equal(saved.fontSize, 16)
+    }
+  } finally {
+    Module._load = originalLoad
+    delete require.cache[modulePath]
+    fs.rmSync(dir, { recursive: true, force: true })
   }
 })

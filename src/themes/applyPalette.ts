@@ -21,7 +21,7 @@ export function applyPalette(settings: Pick<Settings, 'theme' | 'themePreset'>, 
   element.dataset.theme = p.scheme
   const { themePreset } = sanitizeTheme(settings)
   for (const key of Object.keys(tokens(p))) element.style.removeProperty('--dd-' + key)
-  if (themePreset !== 'legacy') for (const [key, value] of Object.entries(tokens(p))) element.style.setProperty('--dd-' + key, value)
+  for (const [key, value] of Object.entries(tokens(p))) element.style.setProperty('--dd-' + key, value)
   element.dataset.preset = themePreset
   return p
 }

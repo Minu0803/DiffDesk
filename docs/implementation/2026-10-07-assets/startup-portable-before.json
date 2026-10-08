@@ -1,0 +1,21 @@
+{
+  "label": "portable-before",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\release\\design-themes\\DiffDesk-portable.exe",
+  "runs": [
+    {
+      "totalMs": 9474,
+      "loadEstimateMs": 6706
+    },
+    {
+      "totalMs": 9343,
+      "loadEstimateMs": 6566
+    },
+    {
+      "totalMs": 9239,
+      "loadEstimateMs": 6450
+    }
+  ],
+  "medianTotalMs": 9343,
+  "medianLoadEstimateMs": 6566,
+  "screenshotWaitMs": 2500
+}

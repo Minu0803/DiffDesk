@@ -5,7 +5,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const root = path.resolve(__dirname, '..')
 const scale = process.env.DIFFDESK_QA_SCALE || '1'
-const preset = process.env.DIFFDESK_QA_PRESET || 'deep-dark'
+const preset = process.env.DIFFDESK_QA_PRESET || 'ink'
 const minimum = process.env.DIFFDESK_QA_MINIMUM === '1'
 const profile = path.join(root, 'build', 'qa-profile-' + preset + '-' + scale)
 fs.mkdirSync(profile, { recursive: true })
@@ -13,7 +13,9 @@ const settings = require('../dist-electron/shared/ipc.js').DEFAULT_SETTINGS
 const { themePatchFor } = require('../dist-electron/shared/themes.js')
 fs.writeFileSync(path.join(profile, 'settings.json'), JSON.stringify({ ...settings, ...themePatchFor(preset) }))
 app.setPath('userData', profile)
-const output = path.join(root, 'docs', 'implementation', '2026-10-06-assets', 'native-' + preset + '-' + scale + (minimum?'-min':'') + '.json')
+const outputDir = process.env.DIFFDESK_QA_OUTPUT_DIR || path.join(root, 'docs/implementation/2026-10-07-custom-themes-assets')
+fs.mkdirSync(outputDir, { recursive: true })
+const output = path.join(outputDir, 'native-' + preset + '-' + scale + (minimum?'-min':'') + '.json')
 app.on('browser-window-created', (_event, window) => {
   window.webContents.setBackgroundThrottling(false)
   if(minimum)window.setSize(960,800)

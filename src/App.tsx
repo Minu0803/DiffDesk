@@ -463,8 +463,7 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
     disposables.push(original.onDidChangeContent(contentChanged))
     disposables.push(modified.onDidChangeContent(contentChanged))
 
-    disposables.push(
-      editor.onDidUpdateDiff(() => {
+    const refreshDiff = () => {
         const versions=bundle.diffSession.getVersions()
         if(!versions)return
         const result = editor.getLineChanges()
@@ -490,8 +489,8 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
         setBandCounts(counts)
         setBandMarkers(markers)
         scheduleChunks()
-      })
-    )
+    }
+    disposables.push(editor.onDidUpdateDiff(refreshDiff))
 
     disposables.push(mod.onDidScrollChange(scheduleChunks))
     disposables.push(orig.onDidScrollChange(scheduleChunks))
@@ -528,6 +527,8 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
     )
 
     refreshDocState()
+    // Empty models can complete synchronously before these listeners attach.
+    refreshDiff()
     scheduleChunks()
 
     return () => {
@@ -796,7 +797,6 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
         onHoverChunk={hoverChunk}
         laneLeft={laneLeft}
         receipt={receipt}
-        showEmptyHint={bothEmpty}
         dropSide={dropSide}
       />
       <StatusBar

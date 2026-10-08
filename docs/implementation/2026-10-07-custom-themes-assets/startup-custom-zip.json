@@ -1,0 +1,21 @@
+{
+  "label": "custom-zip",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\qa-custom-themes\\DiffDesk.exe",
+  "runs": [
+    {
+      "totalMs": 3587,
+      "loadEstimateMs": 971
+    },
+    {
+      "totalMs": 3391,
+      "loadEstimateMs": 786
+    },
+    {
+      "totalMs": 3363,
+      "loadEstimateMs": 758
+    }
+  ],
+  "medianTotalMs": 3391,
+  "medianLoadEstimateMs": 786,
+  "screenshotWaitMs": 2500
+}

@@ -571,24 +571,6 @@ body {
   opacity: 1;
 }
 
-/* ── 빈 화면 안내 ───────────────────────────────────────── */
-
-.dd-empty-hint {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  text-align: center;
-  font-size: 14px;
-  line-height: 1.7;
-  letter-spacing: 0.01em;
-  color: var(--dd-fg-muted);
-  pointer-events: none;
-  user-select: none;
-}
-
 /* ── 커스텀 스크롤바 (webkit) ────────────────────────────── */
 
 ::-webkit-scrollbar {

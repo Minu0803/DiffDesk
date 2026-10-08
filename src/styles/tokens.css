@@ -1,6 +1,6 @@
-/* DiffDesk 디자인 토큰 — UI-SPEC §3 계약. 색 팔레트는 monacoThemes.ts와 같은 계열 유지.
-   시안 B "스테이터스 밴드 + 인디고 소프트": 액센트 인디고, 다크 베이스 블루블랙.
-   다크 --dd-bg(#17181d)는 백엔드 창 backgroundColor와 동기 계약 — 단독 변경 금지 */
+/* DiffDesk 구조 토큰과 자체 기본 팔레트 폴백.
+   실행 시 applyPalette가 shared/themes.ts의 같은 색상을 적용한다.
+   기본 창 배경(#17181d / #ffffff)은 Monaco·Electron과 함께 유지한다. */
 
 :root {
   --dd-font-ui: 'Segoe UI', 'Malgun Gothic', system-ui, sans-serif;
@@ -23,84 +23,76 @@
   --dd-glow: color-mix(in srgb, var(--dd-accent) 12%, transparent);
 }
 
-/* 다크가 기본 무드 — data-theme가 아직 안 붙은 첫 프레임에도 다크로 뜨도록 :root에 병기 */
+/* 첫 페인트 폴백도 외부 테마 대신 DiffDesk 기본 팔레트를 사용한다. */
 :root,
 :root[data-theme='dark'] {
   color-scheme: dark;
 
   --dd-bg: #17181d;
-  --dd-bg-elev: #1e2027;
-  --dd-bg-hover: #262a34;
-  --dd-bg-active: #303543;
-
-  --dd-fg: #d7dae0;
-  --dd-fg-muted: #9aa1ad;
-  --dd-fg-faint: #6f7480;
-
-  --dd-border: #33363f;
-  --dd-border-strong: #4d5260;
-
-  --dd-accent: #8b93ff;
-  --dd-accent-hover: #7a82f5;
-  /* 밝은 인디고 채움 위에는 흰 글자가 대비 미달 — 어두운 잉크로 반전(6.1:1) */
-  --dd-accent-fg: #1b1d2a;
-  --dd-focus-ring: #8b93ff;
-
-  --dd-danger: #f26666;
-  --dd-added: #57ab5a;
-  --dd-added-bg: #1c3428;
-  --dd-removed: #ec6a5e;
-  --dd-removed-bg: #3d2426;
-  --dd-modified: #e0b13e;
-  --dd-modified-bg: #3a3320;
-
-  --dd-chunkbtn-bg: #2c303b;
-  --dd-chunkbtn-fg: #d7dae0;
-  --dd-chunkbtn-border: #646b7d;
-  --dd-chunkbtn-hover-bg: #7a82f5;
-
-  --dd-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
-  --dd-scrollbar-thumb: #7e849266;
-  --dd-drop-overlay-bg: #8b93ff21;
-  --dd-drop-overlay-border: #8b93ff;
+  --dd-bg-elev: #1d2b39;
+  --dd-fg: #e0e9ee;
+  --dd-fg-muted: #a8bdca;
+  --dd-fg-faint: #94adbe;
+  --dd-bg-hover: #2c4256;
+  --dd-bg-active: #2c4256;
+  --dd-border: #394e60;
+  --dd-border-strong: #4e6479;
+  --dd-accent: #a1cce6;
+  --dd-accent-hover: #a1cce6;
+  --dd-accent-soft: #2c4256;
+  --dd-accent-fg: #17181d;
+  --dd-focus-ring: #a1cce6;
+  --dd-danger: #e8bacb;
+  --dd-added: #b3d9bd;
+  --dd-added-bg: #1e382f;
+  --dd-removed: #e8bacb;
+  --dd-removed-bg: #392936;
+  --dd-modified: #a1cce6;
+  --dd-modified-bg: #2c4256;
+  --dd-chunkbtn-bg: #17181d;
+  --dd-chunkbtn-fg: #e0e9ee;
+  --dd-chunkbtn-border: #394e60;
+  --dd-chunkbtn-hover-bg: #2c4256;
+  --dd-shadow: 0 1px 3px #07111b55;
+  --dd-scrollbar-thumb: #a8bdca66;
+  --dd-drop-overlay-bg: #a1cce618;
+  --dd-drop-overlay-border: #a1cce6;
+  --dd-rim: #4e6479;
+  --dd-glow: #a1cce620;
 }
 
 :root[data-theme='light'] {
   color-scheme: light;
 
   --dd-bg: #ffffff;
-  --dd-bg-elev: #f8f9fc;
-  --dd-bg-hover: #eef0f7;
-  --dd-bg-active: #e2e5f1;
-
-  --dd-fg: #1f2328;
-  --dd-fg-muted: #59636e;
-  --dd-fg-faint: #8c959f;
-
-  --dd-border: #dcdfea;
-  --dd-border-strong: #a9b0c6;
-
-  --dd-accent: #5558ce;
-  --dd-accent-hover: #4649bd;
+  --dd-bg-elev: #f3f1eb;
+  --dd-fg: #303337;
+  --dd-fg-muted: #60665f;
+  --dd-fg-faint: #71766f;
+  --dd-bg-hover: #e4eaf0;
+  --dd-bg-active: #e4eaf0;
+  --dd-border: #c7ccc3;
+  --dd-border-strong: #dce0d7;
+  --dd-accent: #365b80;
+  --dd-accent-hover: #365b80;
+  --dd-accent-soft: #e4eaf0;
   --dd-accent-fg: #ffffff;
-  --dd-focus-ring: #5558ce;
-
-  --dd-danger: #cf222e;
-  --dd-added: #1a7f37;
-  --dd-added-bg: #dafbe1;
-  --dd-removed: #cf222e;
-  --dd-removed-bg: #ffebe9;
-  --dd-modified: #9a6700;
-  /* #fff3c4 대비 4.37:1(AA 미달) → #fff8c5로 4.52:1 확보 */
-  --dd-modified-bg: #fff8c5;
-
+  --dd-focus-ring: #365b80;
+  --dd-danger: #863d52;
+  --dd-added: #365f3d;
+  --dd-added-bg: #eaf1e5;
+  --dd-removed: #863d52;
+  --dd-removed-bg: #f7eaea;
+  --dd-modified: #365b80;
+  --dd-modified-bg: #e4eaf0;
   --dd-chunkbtn-bg: #ffffff;
-  --dd-chunkbtn-fg: #3d4650;
-  --dd-chunkbtn-border: #a9b0c6;
-  --dd-chunkbtn-hover-bg: #5558ce;
-
-  --dd-shadow: 0 1px 4px rgba(31, 35, 40, 0.2);
-  --dd-scrollbar-thumb: #8c959f66;
-  --dd-drop-overlay-bg: #5558ce14;
-  --dd-drop-overlay-border: #5558ce;
+  --dd-chunkbtn-fg: #303337;
+  --dd-chunkbtn-border: #c7ccc3;
+  --dd-chunkbtn-hover-bg: #e4eaf0;
+  --dd-shadow: 0 1px 3px #30333722;
+  --dd-scrollbar-thumb: #60665f66;
+  --dd-drop-overlay-bg: #365b8018;
+  --dd-drop-overlay-border: #365b80;
+  --dd-rim: #dce0d7;
+  --dd-glow: #365b8017;
 }

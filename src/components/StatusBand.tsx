@@ -38,6 +38,7 @@ export function StatusBand(p: StatusBandProps) {
       <span className="dd-band__verdict" aria-live="polite">
         {verdict}
       </span>
+      {p.bothEmpty && <span className="dd-band__sub dd-band__hint">파일을 끌어다 놓거나, 붙여넣거나, 열기로 시작하세요</span>}
       {state === 'same' && p.leftLines === p.rightLines && <span className="dd-band__sub">{p.leftLines}줄 모두 일치</span>}
       {state === 'diff' && (
         <>

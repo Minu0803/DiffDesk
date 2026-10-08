@@ -8,6 +8,7 @@ files:
 npmRebuild: false
 win:
   icon: build/icon.ico
+  artifactName: DiffDesk-fast-start.${ext}
   target:
     - target: dir
       arch:
@@ -15,5 +16,10 @@ win:
     - target: portable
       arch:
         - x64
+    - target: zip
+      arch:
+        - x64
 portable:
   artifactName: DiffDesk-portable.exe
+  # NSIS's zlib path avoids the slower embedded 7z extraction on every launch.
+  useZip: true

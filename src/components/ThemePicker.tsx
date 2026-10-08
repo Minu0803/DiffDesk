@@ -3,7 +3,7 @@ import { THEME_PALETTES, THEME_PRESET_IDS, isThemePreset } from '../../shared/th
 import type { ThemeSelection } from '../../shared/themes'
 import { MotionButton } from './MotionButton'
 
-const LABELS = { system: '시스템', light: '기존 Light', dark: '기존 Dark' }
+const LABELS = { system: '시스템', light: '기본 라이트', dark: '기본 다크' }
 
 export function ThemePicker({ value, onChange }: { value: ThemeSelection; onChange: (value: ThemeSelection) => void }) {
   const [open, setOpen] = useState(false)
@@ -35,7 +35,7 @@ export function ThemePicker({ value, onChange }: { value: ThemeSelection; onChan
         const p=isThemePreset(id)?THEME_PALETTES[id]:null
         return <label key={id} className={'dd-theme-option'+(value===id?' is-selected':'')} onPointerDown={()=>{pointer.current=true}}>
           <input type="radio" name="dd-theme" value={id} checked={value===id} onClick={e=>{if(e.detail>0&&value===id)close(true)}} onChange={()=>{onChange(id);if(pointer.current)close(true);pointer.current=false}} />
-          <span className="dd-theme-option__label">{p?.name||LABELS[id as keyof typeof LABELS]}<small>{p?.note||(id==='system'?'운영체제의 밝기 설정 따름':'기존 팔레트 유지')}</small></span>
+          <span className="dd-theme-option__label">{p?.name||LABELS[id as keyof typeof LABELS]}<small>{p?.note||(id==='system'?'운영체제의 밝기 설정 따름':'DiffDesk 기본 팔레트')}</small></span>
           {p && <span className="dd-theme-swatches" aria-hidden="true">{[p.bg,p.keyword,p.string].map((color,i)=><i key={i} style={{backgroundColor:color}} />)}</span>}
         </label>
       })}

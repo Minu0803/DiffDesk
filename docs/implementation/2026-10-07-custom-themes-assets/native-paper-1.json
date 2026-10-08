@@ -1,0 +1,117 @@
+{
+  "nativeApi": true,
+  "startup": "#fdfcf9",
+  "savedPreset": "paper",
+  "appliedPreset": "paper",
+  "background": "rgb(253, 252, 249)",
+  "scale": 1,
+  "width": 1424,
+  "codeHeight": 705,
+  "reduced": false,
+  "faceTransition": "0.14s, 0.14s",
+  "laneWidth": 64,
+  "buttons": 10,
+  "inLane": true,
+  "numberOverlap": 0,
+  "firstButton": {
+    "x": 637,
+    "y": 104,
+    "width": 26,
+    "height": 26
+  },
+  "firstFace": {
+    "x": 639,
+    "y": 106,
+    "width": 22,
+    "height": 22,
+    "display": "flex",
+    "opacity": "1",
+    "color": "rgb(48, 51, 55)",
+    "text": "→",
+    "background": "rgba(0, 0, 0, 0)",
+    "parents": [
+      {
+        "class": "dd-button-face dd-chunk-face",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "auto",
+        "width": 22,
+        "height": 22,
+        "overflow": "visible"
+      },
+      {
+        "class": "dd-chunk-btn dd-chunk-btn--ltr",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "auto",
+        "width": 26,
+        "height": 26,
+        "overflow": "visible"
+      },
+      {
+        "class": "dd-chunk-pair",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "1",
+        "width": 56,
+        "height": 26,
+        "overflow": "visible"
+      },
+      {
+        "class": "dd-chunk-strip",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "20",
+        "width": 1424,
+        "height": 705,
+        "overflow": "hidden"
+      },
+      {
+        "class": "dd-editor-area",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "auto",
+        "width": 1424,
+        "height": 705,
+        "overflow": "hidden"
+      },
+      {
+        "class": "dd-app",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "auto",
+        "width": 1424,
+        "height": 835,
+        "overflow": "hidden"
+      },
+      {
+        "class": "",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "auto",
+        "width": 1424,
+        "height": 835,
+        "overflow": "visible"
+      },
+      {
+        "class": "enable-motion underline-links",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "auto",
+        "width": 1424,
+        "height": 835,
+        "overflow": "hidden"
+      },
+      {
+        "class": "",
+        "visibility": "visible",
+        "opacity": "1",
+        "z": "auto",
+        "width": 1424,
+        "height": 835,
+        "overflow": "visible"
+      }
+    ]
+  },
+  "toolbarOverflow": 0
+}

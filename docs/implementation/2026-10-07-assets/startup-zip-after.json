@@ -1,0 +1,21 @@
+{
+  "label": "zip-after",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\qa-fast-start\\DiffDesk.exe",
+  "runs": [
+    {
+      "totalMs": 3749,
+      "loadEstimateMs": 1086
+    },
+    {
+      "totalMs": 3611,
+      "loadEstimateMs": 981
+    },
+    {
+      "totalMs": 3595,
+      "loadEstimateMs": 980
+    }
+  ],
+  "medianTotalMs": 3611,
+  "medianLoadEstimateMs": 981,
+  "screenshotWaitMs": 2500
+}

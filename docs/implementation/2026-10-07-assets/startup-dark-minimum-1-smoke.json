@@ -1,0 +1,13 @@
+{
+  "drop": true,
+  "autoLanguage": true,
+  "syntax": true,
+  "merge": true,
+  "undo": true,
+  "inline": true,
+  "clear": true,
+  "hintFits": true,
+  "width": 944,
+  "theme": "deep-dark",
+  "find": true
+}

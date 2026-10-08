@@ -1,0 +1,21 @@
+{
+  "label": "folder-after",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\release\\startup-improved\\win-unpacked\\DiffDesk.exe",
+  "runs": [
+    {
+      "totalMs": 3509,
+      "loadEstimateMs": 896
+    },
+    {
+      "totalMs": 3423,
+      "loadEstimateMs": 804
+    },
+    {
+      "totalMs": 3399,
+      "loadEstimateMs": 793
+    }
+  ],
+  "medianTotalMs": 3423,
+  "medianLoadEstimateMs": 804,
+  "screenshotWaitMs": 2500
+}
