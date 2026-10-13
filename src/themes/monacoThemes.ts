@@ -25,11 +25,13 @@ export function makeMonacoTheme(p: ThemePalette): monaco.editor.IStandaloneTheme
       'editor.background': p.bg, 'editor.foreground': p.text,
       'editorLineNumber.foreground': p['line-number'], 'editorLineNumber.activeForeground': p.text,
       'editorCursor.foreground': p.text,
-      'editor.selectionBackground': p.selection, 'editor.inactiveSelectionBackground': p.selection,
+      'editor.selectionBackground': p.selection, 'editor.inactiveSelectionBackground': p['inactive-selection'],
+      'editor.selectionForeground': p['selection-foreground'],
       'editor.selectionHighlightBackground': p['accent-bg'], 'editor.lineHighlightBackground': p.bg,
       'editor.lineHighlightBorder': '#00000000',
       'diffEditor.insertedTextBackground': p['word-add'], 'diffEditor.removedTextBackground': p['word-del'],
       'diffEditor.insertedLineBackground': p.added, 'diffEditor.removedLineBackground': p.deleted,
+      'diffEditor.insertedTextBorder': p['add-foreground'] + '66', 'diffEditor.removedTextBorder': p['del-foreground'] + '66',
       'diffEditorGutter.insertedLineBackground': p.added, 'diffEditorGutter.removedLineBackground': p.deleted,
       'diffEditor.diagonalFill': p.border + '66', 'diffEditor.border': p.border,
       'diffEditorOverview.insertedForeground': p['add-foreground'], 'diffEditorOverview.removedForeground': p['del-foreground'],
@@ -38,7 +40,7 @@ export function makeMonacoTheme(p: ThemePalette): monaco.editor.IStandaloneTheme
       'editorSuggestWidget.background': p.chrome, 'editorSuggestWidget.foreground': p.text, 'editorSuggestWidget.border': p.border,
       'input.background': p.bg, 'input.foreground': p.text, 'input.border': p.border,
       'scrollbarSlider.background': p.muted + '66', 'scrollbarSlider.hoverBackground': p.muted + '99',
-      'scrollbarSlider.activeBackground': p.muted + 'bb', 'focusBorder': '#00000000'
+      'scrollbarSlider.activeBackground': p.muted + 'bb', 'focusBorder': p['selection-border']
     }
   }
 }

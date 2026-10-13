@@ -1,0 +1,20 @@
+{
+  "zip": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\release\\appearance-2026-10-11\\DiffDesk-fast-start.zip",
+  "size": 114684897,
+  "sha256": "1bb3775d310af5c01289c23d89f19b3abf0b20891a2193d28047cb626df93149",
+  "extracted": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\appearance-extracted-bMkrRD",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\appearance-extracted-bMkrRD\\DiffDesk.exe",
+  "zipIntegrity": true,
+  "x64": true,
+  "packageFiles": 75,
+  "buildFiles": 101,
+  "mismatches": 0,
+  "qaFiles": 0,
+  "licenseNotices": [
+    "LICENSE.electron.txt",
+    "LICENSES.chromium.html",
+    "resources/licenses/Monaco-LICENSE.txt",
+    "resources/licenses/React-LICENSE.txt",
+    "resources/licenses/ReactDOM-LICENSE.txt"
+  ]
+}

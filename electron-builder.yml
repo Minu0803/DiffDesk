@@ -5,21 +5,26 @@ directories:
 files:
   - dist/**
   - dist-electron/**
+extraResources:
+  - from: node_modules/monaco-editor/LICENSE
+    to: licenses/Monaco-LICENSE.txt
+  - from: node_modules/react/LICENSE
+    to: licenses/React-LICENSE.txt
+  - from: node_modules/react-dom/LICENSE
+    to: licenses/ReactDOM-LICENSE.txt
 npmRebuild: false
 win:
   icon: build/icon.ico
-  artifactName: DiffDesk-fast-start.${ext}
   target:
-    - target: dir
+    - target: nsis
       arch:
         - x64
-    - target: portable
-      arch:
-        - x64
-    - target: zip
-      arch:
-        - x64
-portable:
-  artifactName: DiffDesk-portable.exe
-  # NSIS's zlib path avoids the slower embedded 7z extraction on every launch.
-  useZip: true
+nsis:
+  artifactName: DiffDesk-Setup-${version}.${ext}
+  oneClick: true
+  perMachine: false
+  packElevateHelper: false
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  runAfterFinish: true
+  deleteAppDataOnUninstall: false

@@ -1,0 +1,21 @@
+{
+  "zip": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\release\\unified-black-2026-10-12\\DiffDesk-fast-start.zip",
+  "size": 114685083,
+  "sha256": "1922775e2cbb98023b48367a79ac1f77b687244aa9dda7a9f727f714891af992",
+  "extracted": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\unified-zip-extracted-pxlmf8",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\unified-zip-extracted-pxlmf8\\DiffDesk.exe",
+  "archiveIntegrity": true,
+  "zipIntegrity": true,
+  "x64": true,
+  "packageFiles": 76,
+  "buildFiles": 101,
+  "mismatches": 0,
+  "qaFiles": 0,
+  "licenseNotices": [
+    "LICENSE.electron.txt",
+    "LICENSES.chromium.html",
+    "resources/licenses/Monaco-LICENSE.txt",
+    "resources/licenses/React-LICENSE.txt",
+    "resources/licenses/ReactDOM-LICENSE.txt"
+  ]
+}

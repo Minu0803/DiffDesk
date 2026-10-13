@@ -1,0 +1,22 @@
+{
+  "label": "unified-setup-payload",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\unified-setup-extracted-kajDDF\\DiffDesk.exe",
+  "isolatedProfile": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\startup-unified-setup-payload-dVC8aB\\profile",
+  "runs": [
+    {
+      "totalMs": 3432,
+      "loadEstimateMs": 811
+    },
+    {
+      "totalMs": 3385,
+      "loadEstimateMs": 772
+    },
+    {
+      "totalMs": 3345,
+      "loadEstimateMs": 765
+    }
+  ],
+  "medianTotalMs": 3385,
+  "medianLoadEstimateMs": 772,
+  "screenshotWaitMs": 2500
+}

@@ -5,7 +5,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const root = path.resolve(__dirname, '..')
 const scale = process.env.DIFFDESK_QA_SCALE || '1'
-const preset = process.env.DIFFDESK_QA_PRESET || 'ink'
+const preset = process.env.DIFFDESK_QA_PRESET || 'dark'
 const minimum = process.env.DIFFDESK_QA_MINIMUM === '1'
 const profile = path.join(root, 'build', 'qa-profile-' + preset + '-' + scale)
 fs.mkdirSync(profile, { recursive: true })

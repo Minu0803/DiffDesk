@@ -1,6 +1,6 @@
 /* DiffDesk 구조 토큰과 자체 기본 팔레트 폴백.
    실행 시 applyPalette가 shared/themes.ts의 같은 색상을 적용한다.
-   기본 창 배경(#17181d / #ffffff)은 Monaco·Electron과 함께 유지한다. */
+   기본 창 배경(#0e0e0e / #ffffff)은 Monaco·Electron과 함께 유지한다. */
 
 :root {
   --dd-font-ui: 'Segoe UI', 'Malgun Gothic', system-ui, sans-serif;
@@ -9,10 +9,10 @@
   --dd-fs-ui: 13px;
   --dd-fs-small: 12px;
 
-  --dd-toolbar-h: 42px;
-  --dd-band-h: 32px;
-  --dd-paneheader-h: 30px;
-  --dd-statusbar-h: 26px;
+  --dd-toolbar-h: 46px;
+  --dd-band-h: 36px;
+  --dd-paneheader-h: 36px;
+  --dd-statusbar-h: 30px;
   --dd-radius: 10px;
   --dd-radius-sm: 6px;
   --dd-gap: 8px;
@@ -28,37 +28,40 @@
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --dd-bg: #17181d;
-  --dd-bg-elev: #1d2b39;
-  --dd-fg: #e0e9ee;
-  --dd-fg-muted: #a8bdca;
-  --dd-fg-faint: #94adbe;
-  --dd-bg-hover: #2c4256;
-  --dd-bg-active: #2c4256;
-  --dd-border: #394e60;
-  --dd-border-strong: #4e6479;
-  --dd-accent: #a1cce6;
-  --dd-accent-hover: #a1cce6;
-  --dd-accent-soft: #2c4256;
-  --dd-accent-fg: #17181d;
-  --dd-focus-ring: #a1cce6;
-  --dd-danger: #e8bacb;
-  --dd-added: #b3d9bd;
-  --dd-added-bg: #1e382f;
-  --dd-removed: #e8bacb;
-  --dd-removed-bg: #392936;
-  --dd-modified: #a1cce6;
-  --dd-modified-bg: #2c4256;
-  --dd-chunkbtn-bg: #17181d;
-  --dd-chunkbtn-fg: #e0e9ee;
-  --dd-chunkbtn-border: #394e60;
-  --dd-chunkbtn-hover-bg: #2c4256;
-  --dd-shadow: 0 1px 3px #07111b55;
-  --dd-scrollbar-thumb: #a8bdca66;
-  --dd-drop-overlay-bg: #a1cce618;
-  --dd-drop-overlay-border: #a1cce6;
-  --dd-rim: #4e6479;
-  --dd-glow: #a1cce620;
+  --dd-bg: #0e0e0e;
+  --dd-bg-elev: #181818;
+  --dd-fg: #ededed;
+  --dd-fg-muted: #adadad;
+  --dd-fg-faint: #999999;
+  --dd-bg-hover: #262626;
+  --dd-bg-active: #262626;
+  --dd-border: #303030;
+  --dd-border-strong: #424242;
+  --dd-accent: #a6c5ff;
+  --dd-accent-hover: #a6c5ff;
+  --dd-accent-soft: #262626;
+  --dd-accent-fg: #0e0e0e;
+  --dd-focus-ring: #a6c5ff;
+  --dd-selection: #2455a4;
+  --dd-selection-fg: #ffffff;
+  --dd-selection-border: #89b9ff;
+  --dd-danger: #ff9990;
+  --dd-added: #78dfa4;
+  --dd-added-bg: #163328;
+  --dd-removed: #ff9990;
+  --dd-removed-bg: #391e1e;
+  --dd-modified: #a6c5ff;
+  --dd-modified-bg: #262626;
+  --dd-chunkbtn-bg: #0e0e0e;
+  --dd-chunkbtn-fg: #ededed;
+  --dd-chunkbtn-border: #303030;
+  --dd-chunkbtn-hover-bg: #262626;
+  --dd-shadow: 0 1px 3px #00000066;
+  --dd-scrollbar-thumb: #adadad66;
+  --dd-drop-overlay-bg: #a6c5ff18;
+  --dd-drop-overlay-border: #a6c5ff;
+  --dd-rim: #424242;
+  --dd-glow: #a6c5ff20;
 }
 
 :root[data-theme='light'] {
@@ -78,11 +81,14 @@
   --dd-accent-soft: #e4eaf0;
   --dd-accent-fg: #ffffff;
   --dd-focus-ring: #365b80;
-  --dd-danger: #863d52;
-  --dd-added: #365f3d;
-  --dd-added-bg: #eaf1e5;
-  --dd-removed: #863d52;
-  --dd-removed-bg: #f7eaea;
+  --dd-selection: #bed8ff;
+  --dd-selection-fg: #152b4b;
+  --dd-selection-border: #3566ab;
+  --dd-danger: #963e38;
+  --dd-added: #28603b;
+  --dd-added-bg: #e0efdf;
+  --dd-removed: #963e38;
+  --dd-removed-bg: #f8e2df;
   --dd-modified: #365b80;
   --dd-modified-bg: #e4eaf0;
   --dd-chunkbtn-bg: #ffffff;

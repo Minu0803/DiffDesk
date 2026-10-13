@@ -1,0 +1,21 @@
+{
+  "setup": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\release\\installer-only-2026-10-12\\DiffDesk-Setup-1.0.0.exe",
+  "size": 84583548,
+  "sha256": "7c11722d130ce8aef562fc38fab9018f73b6a7aba5def443feb11b544edd36fe",
+  "extracted": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\setup-release-extracted-4g2v0m",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\setup-release-extracted-4g2v0m\\DiffDesk.exe",
+  "archiveIntegrity": true,
+  "setupPayloadIntegrity": true,
+  "x64": true,
+  "packageFiles": 76,
+  "buildFiles": 101,
+  "mismatches": 0,
+  "qaFiles": 0,
+  "licenseNotices": [
+    "LICENSE.electron.txt",
+    "LICENSES.chromium.html",
+    "resources/licenses/Monaco-LICENSE.txt",
+    "resources/licenses/React-LICENSE.txt",
+    "resources/licenses/ReactDOM-LICENSE.txt"
+  ]
+}

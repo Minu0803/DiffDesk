@@ -16,11 +16,11 @@ test('preset persists across settings reload without putting a preset into nativ
     delete require.cache[modulePath]
     let settings=require(modulePath)
     settings.initSettings()
-    settings.patchSettings({theme:'dark',themePreset:'ink',wordWrap:true})
-    assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'settings.json'),'utf8')).themePreset,'ink')
+    settings.patchSettings({theme:'dark',themePreset:'midnight',wordWrap:true})
+    assert.equal(JSON.parse(fs.readFileSync(path.join(dir,'settings.json'),'utf8')).themePreset,'midnight')
     delete require.cache[modulePath]
     settings=require(modulePath)
-    assert.equal(settings.initSettings().themePreset,'ink')
+    assert.equal(settings.initSettings().themePreset,'midnight')
     assert.equal(settings.getSettings().wordWrap,true)
     assert.equal(source,'dark')
     settings.patchSettings({theme:'system',themePreset:'invalid-preset'})
@@ -39,7 +39,7 @@ test('old preset settings migrate on load and save under the new ID without losi
   Module._load = function(name, ...args) { return name === 'electron' ? { app: { getPath: () => dir }, nativeTheme } : originalLoad.call(this, name, ...args) }
   const modulePath = require.resolve('../electron/settings.ts')
   try {
-    for (const [oldId, newId, theme] of [['one-dark', 'graphite', 'dark'], ['dracula', 'plum', 'dark'], ['nord', 'mist', 'dark'], ['github-light', 'paper', 'light']]) {
+    for (const [oldId, newId, theme] of [['ink', 'legacy', 'dark'], ['deep-dark', 'legacy', 'dark'], ['one-dark', 'graphite', 'dark'], ['dracula', 'plum', 'dark'], ['nord', 'mist', 'dark'], ['github-light', 'paper', 'light']]) {
       fs.writeFileSync(path.join(dir, 'settings.json'), JSON.stringify({ theme, themePreset: oldId, wordWrap: true, fontSize: 16 }))
       delete require.cache[modulePath]
       const settings = require(modulePath)

@@ -1,6 +1,6 @@
 # DiffDesk
 
-웹 디프 도구에 회사 코드를 붙여넣지 않기 위해 만든 완전 오프라인 텍스트·코드 비교/병합 데스크톱 앱 — DiffChecker류 대체, 설치 불필요, 외부 요청 0건.
+웹 디프 도구에 회사 코드를 붙여넣지 않기 위해 만든 완전 오프라인 텍스트·코드 비교/병합 데스크톱 앱 — DiffChecker류 대체, Windows 설치 프로그램 제공, 외부 요청 0건.
 
 ![platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0078D6)
 ![electron](https://img.shields.io/badge/Electron-33-47848F)
@@ -18,7 +18,7 @@
 - **파일 다루기** — 열기 다이얼로그, 반쪽 드래그&드롭(왼쪽 반 = 왼쪽 판), 붙여넣기(전체 교체), 저장.
 - **구문 강조 25+ 언어** — 확장자 자동 감지 + 수동 선택.
 - **보기 옵션** — 다크/라이트/시스템 테마, 공백 무시, 자동 줄바꿈, `Ctrl+휠` 글꼴 확대/축소.
-- **자체 테마** — 먹색·밤하늘·흑연·자주빛·청안개·백지. 외부 테마의 이름이나 팔레트를 사용하지 않습니다. 이전 테마 설정은 새 자체 테마로 자동 연결됩니다.
+- **자체 테마** — 기본 블랙·밤하늘·흑연·자주빛·청안개·백지. 먹색은 기본 블랙으로 통합했습니다. 외부 테마의 이름이나 팔레트를 사용하지 않습니다. 이전 테마 설정은 새 자체 테마로 자동 연결됩니다.
 
 ## 📷 스크린샷
 
@@ -29,11 +29,10 @@
 
 ## ⬇ 다운로드·실행
 
-[Releases](../../releases)에서 실행 방식을 선택할 수 있습니다. 또는 아래 "빌드·개발" 절을 따라 직접 빌드할 수 있습니다.
+[Releases](../../releases)에서 설치 프로그램을 받을 수 있습니다. 또는 아래 "빌드·개발" 절을 따라 직접 빌드할 수 있습니다.
 
-- **빠른 시작 ZIP (추천)**: `DiffDesk-fast-start.zip` — 원하는 폴더에 한 번 압축을 풀고 안의 `DiffDesk.exe`를 실행합니다. 이후 실행마다 압축을 풀 필요가 없습니다. EXE와 함께 있는 파일·폴더를 그대로 유지하세요.
-- **단일 EXE**: `DiffDesk-portable.exe` — 빈 폴더에 옮겨도 단독 실행됩니다. 빠르게 해제되는 압축 방식을 사용하지만 실행할 때마다 임시 폴더에 풀기 때문에 ZIP의 폴더 버전보다 시작이 느릴 수 있습니다.
-- **직접 빌드한 폴더 버전**: `release\win-unpacked\DiffDesk.exe` — ZIP과 같은 실행 방식입니다.
+- **설치 프로그램**: `DiffDesk-Setup-1.0.0.exe` — 실행하면 현재 사용자 계정에 설치하고 앱을 엽니다. 압축 해제가 필요 없으며 바탕화면과 시작 메뉴에 바로가기를 만듭니다. Windows의 설치된 앱 목록에서 제거할 수 있습니다.
+- **개발용 앱 폴더**: `release\win-unpacked\DiffDesk.exe` — 설치 프로그램을 만드는 내부 빌드 결과입니다.
 - **CLI**: `DiffDesk.exe 왼쪽파일 오른쪽파일`
 
 > 서명 없는 빌드라 Windows SmartScreen 경고가 뜰 수 있습니다 — **"추가 정보" → "실행"** 으로 진행하세요.
@@ -65,10 +64,10 @@
 npm install          # 최초 1회
 npm run dev          # 개발 모드 (vite + electron)
 npm run typecheck    # 타입 검사
-npm run pack         # 아이콘 → 렌더러 → 메인 빌드 → release\ 에 EXE·ZIP 패키징
+npm run pack         # 아이콘 → 렌더러 → 메인 빌드 → release\ 에 Windows x64 설치 EXE 패키징
 ```
 
-DiffDesk 변경 작업을 마칠 때는 항상 최신 코드로 ZIP을 만듭니다. `npm run pack`은 `release\DiffDesk-fast-start.zip`도 생성합니다. 프로젝트 작업 규칙은 [AGENTS.md](AGENTS.md)에 있습니다.
+DiffDesk 변경 작업을 마칠 때는 항상 최신 코드로 설치 프로그램을 만듭니다. `npm run pack`은 `release\DiffDesk-Setup-1.0.0.exe`를 생성합니다. ZIP과 portable EXE는 더 이상 만들지 않습니다. 프로젝트 작업 규칙은 [AGENTS.md](AGENTS.md)에 있습니다.
 
 ## 📁 구조·설정 파일
 
@@ -88,3 +87,4 @@ DiffDesk 변경 작업을 마칠 때는 항상 최신 코드로 ZIP을 만듭니
 - QA 플래그: `DiffDesk.exe --qa-screenshot=C:\경로\shot.png`는 내장 샘플 디프를 렌더해 스크린샷을 저장한 뒤 종료하고, `--qa-same`은 두 문서가 동일한 샘플 상태로 렌더합니다.
 - 시작·동작 QA: renderer/Electron 빌드 후 `node scripts/qa-startup.cjs current --check --smoke`로 격리 프로필에서 빈 화면, 드롭, 문법 강조, 병합·실행 취소, 검색을 확인합니다. 결과 PNG/JSON은 `build/`에 저장됩니다.
 - 패키지 시작 비교: 앱을 모두 닫고 `node scripts/qa-packaged-startup.cjs 실행파일경로 라벨`을 실행합니다. 각 실행의 캡처 파일 생성 시각에서 내장 캡처 대기 2.5초를 빼 시작 시간을 추정합니다. 프로세스 종료 시간은 압축 해제 폴더 정리도 포함하므로 별도로 기록합니다. 첫 실행의 캐시·보안 검사 때문에 편차가 있을 수 있습니다.
+- 실행 중인 앱과 분리해 패키지를 검사하려면 위 명령에 `--isolated`를 추가합니다. 작업 폴더의 별도 설정을 사용하므로 실행 중인 앱을 닫지 않고 확인할 수 있습니다.

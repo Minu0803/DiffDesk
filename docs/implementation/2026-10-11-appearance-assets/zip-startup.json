@@ -1,0 +1,21 @@
+{
+  "label": "appearance-zip",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\appearance-extracted-bMkrRD\\DiffDesk.exe",
+  "runs": [
+    {
+      "totalMs": 3524,
+      "loadEstimateMs": 917
+    },
+    {
+      "totalMs": 3399,
+      "loadEstimateMs": 799
+    },
+    {
+      "totalMs": 3389,
+      "loadEstimateMs": 787
+    }
+  ],
+  "medianTotalMs": 3399,
+  "medianLoadEstimateMs": 799,
+  "screenshotWaitMs": 2500
+}

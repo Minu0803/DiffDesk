@@ -10,6 +10,7 @@ import { api, hasNativeApi } from './lib/api'
 import { emptyPaneMeta } from './lib/pane'
 import type { PaneMeta } from './lib/pane'
 import { detectLanguage } from './lib/langDetect'
+import { selectionLabel } from './lib/selection'
 import { applyChunk, copyAll, replaceAll, swapValues } from './lib/mergeChunks'
 import type { MergeDirection } from './lib/mergeChunks'
 import { useDiffEditor, reserveMergeLane } from './hooks/useDiffEditor'
@@ -94,6 +95,7 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
   const [bandCounts, setBandCounts] = useState<BandCounts>({ modified: 0, added: 0, removed: 0 })
   const [bandMarkers, setBandMarkers] = useState<BandMarker[]>([])
   const [cursor, setCursor] = useState({ line: 1, col: 1 })
+  const [selectedRange, setSelectedRange] = useState('')
   const [dropSide, setDropSide] = useState<PaneSide | null>(null)
   const [effectiveLang, setEffectiveLang] = useState('plaintext')
 
@@ -441,6 +443,16 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
     const disposables: monaco.IDisposable[] = []
     highlightRef.current={left:orig.createDecorationsCollection(),right:mod.createDecorationsCollection()}
     flashRef.current={left:orig.createDecorationsCollection(),right:mod.createDecorationsCollection()}
+    // Monaco 0.52 applies selectionForeground only in high-contrast themes.
+    // Public inline decorations keep selected syntax readable in every palette.
+    const selectedText = { left: orig.createDecorationsCollection(), right: mod.createDecorationsCollection() }
+    const refreshSelection = (side: PaneSide) => {
+      const ranges = (side === 'left' ? orig : mod).getSelections()
+      selectedText[side].set((ranges ?? []).filter(r => !r.isEmpty()).map(range => ({
+        range, options: { inlineClassName: 'dd-selected-text', stickiness: monaco.editor.TrackedRangeStickiness.NeverGrowsWhenTypingAtEdges }
+      })))
+      if (focusedSideRef.current === side) setSelectedRange(selectionLabel(ranges))
+    }
 
     const refreshDocState = () => {
       setLineCounts({ left: original.getLineCount(), right: modified.getLineCount() })
@@ -505,6 +517,7 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
         setActiveSide('left')
         const pos = orig.getPosition()
         if (pos) setCursor({ line: pos.lineNumber, col: pos.column })
+        setSelectedRange(selectionLabel(orig.getSelections()))
       })
     )
     disposables.push(
@@ -513,6 +526,7 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
         setActiveSide('right')
         const pos = mod.getPosition()
         if (pos) setCursor({ line: pos.lineNumber, col: pos.column })
+        setSelectedRange(selectionLabel(mod.getSelections()))
       })
     )
     disposables.push(
@@ -525,6 +539,8 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
         if (focusedSideRef.current === 'right') setCursor({ line: e.position.lineNumber, col: e.position.column })
       })
     )
+    disposables.push(orig.onDidChangeCursorSelection(() => refreshSelection('left')))
+    disposables.push(mod.onDidChangeCursorSelection(() => refreshSelection('right')))
 
     refreshDocState()
     // Empty models can complete synchronously before these listeners attach.
@@ -534,6 +550,7 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
     return () => {
       window.removeEventListener('resize', onResize)
       for (const d of disposables) d.dispose()
+      selectedText.left.clear(); selectedText.right.clear()
       highlightRef.current?.left.clear();highlightRef.current?.right.clear();highlightRef.current=null
       window.clearTimeout(receiptTimerRef.current)
       window.clearTimeout(flashTimerRef.current.left);window.clearTimeout(flashTimerRef.current.right)
@@ -643,7 +660,9 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
     if (!area) return
     const sideOf = (e: DragEvent): PaneSide => {
       const rect = area.getBoundingClientRect()
-      return e.clientX < rect.left + rect.width / 2 ? 'left' : 'right'
+      const original = bundleRef.current?.editor.getOriginalEditor().getDomNode()?.getBoundingClientRect()
+      const split = settingsRef.current.renderSideBySide && original ? original.right - MERGE_LANE_WIDTH / 2 : rect.left + rect.width / 2
+      return e.clientX < split ? 'left' : 'right'
     }
     const hasFiles = (e: DragEvent) => Array.from(e.dataTransfer?.types ?? []).includes('Files')
     const onDragOver = (e: DragEvent) => {
@@ -682,18 +701,21 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
       }
     }
     const swallow = (e: DragEvent) => e.preventDefault()
+    const onDragEnd = () => setDropSide(null)
     area.addEventListener('dragover', onDragOver, true)
     area.addEventListener('dragleave', onDragLeave, true)
     area.addEventListener('drop', onDrop, true)
     // 영역 밖 드롭이 브라우저 파일 내비게이션으로 새지 않게
     window.addEventListener('dragover', swallow)
     window.addEventListener('drop', swallow)
+    window.addEventListener('dragend', onDragEnd)
     return () => {
       area.removeEventListener('dragover', onDragOver, true)
       area.removeEventListener('dragleave', onDragLeave, true)
       area.removeEventListener('drop', onDrop, true)
       window.removeEventListener('dragover', swallow)
       window.removeEventListener('drop', swallow)
+      window.removeEventListener('dragend', onDragEnd)
     }
   }, [])
 
@@ -810,6 +832,7 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
         rightEncoding={metas.right.encoding}
         cursorLine={cursor.line}
         cursorCol={cursor.col}
+        selection={selectedRange}
         feedback={feedback}
         activeSide={activeSide}
         canUndo={canUndo[activeSide]}

@@ -1,0 +1,38 @@
+{
+  "width": 1424,
+  "background": "rgb(14, 14, 14)",
+  "startup": "#0e0e0e",
+  "laneWidth": 64,
+  "dropAligned": true,
+  "toolbarOverflow": 0,
+  "statusOverflow": false,
+  "reduced": false,
+  "themeChoices": {
+    "values": [
+      "system",
+      "light",
+      "dark",
+      "midnight",
+      "graphite",
+      "plum",
+      "mist",
+      "paper"
+    ],
+    "blackCount": 1,
+    "oldInk": false,
+    "selected": "dark"
+  },
+  "selection": "선택 14:4 → 16:14 · 3줄",
+  "selectionPixels": 820,
+  "selectedGlyphPixels": 100,
+  "reverseDrag": true,
+  "selectionCleared": true,
+  "selectionFocus": true,
+  "replaceSelection": true,
+  "undo": true,
+  "clearSelectedDocument": true,
+  "reload": true,
+  "drop": true,
+  "cancelledDrop": true,
+  "errors": []
+}

@@ -1,0 +1,12 @@
+{
+  "installer": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\release\\installer-2026-10-12\\DiffDesk-Setup-1.0.0.exe",
+  "installDirectory": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\installer-smoke-06324da9",
+  "installed": true,
+  "packageFiles": 76,
+  "shortcuts": true,
+  "appRegistration": true,
+  "launch": true,
+  "uninstalled": true,
+  "registryRemoved": true,
+  "shortcutsRemoved": true
+}

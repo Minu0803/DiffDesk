@@ -13,13 +13,18 @@ delete env.ELECTRON_RUN_AS_NODE
   // A running normal instance exits the QA launch with code 0. Unique paths
   // ensure that an old screenshot can never make that exit look successful.
   const captureDir = fs.mkdtempSync(path.join(root, 'build', `startup-${label}-`))
+  const isolatedProfile = process.argv.includes('--isolated') ? path.join(captureDir, 'profile') : null
+  if (isolatedProfile) {
+    fs.mkdirSync(isolatedProfile, { recursive: true })
+    fs.writeFileSync(path.join(isolatedProfile, 'settings.json'), JSON.stringify({ theme: 'dark', themePreset: 'ink' }))
+  }
   const runs = []
   for (let i = 1; i <= 3; i++) {
     const output = path.join(captureDir, `run-${i}.png`)
     const started = performance.now()
     const startedWallMs = Date.now()
     const code = await new Promise((resolve, reject) => {
-      const child = spawn(executable, [`--qa-screenshot=${output}`], { cwd: root, windowsHide: true, env, stdio: 'inherit' })
+      const child = spawn(executable, [`--qa-screenshot=${output}`, ...(isolatedProfile ? [`--user-data-dir=${isolatedProfile}`] : [])], { cwd: root, windowsHide: true, env, stdio: 'inherit' })
       child.on('error', reject)
       child.on('exit', resolve)
     })
@@ -33,7 +38,7 @@ delete env.ELECTRON_RUN_AS_NODE
     console.log(JSON.stringify({ label, run: i, totalMs, loadEstimateMs }))
   }
   const median = key => runs.map(r => r[key]).sort((a, b) => a - b)[1]
-  const data = { label, executable, runs, medianTotalMs: median('totalMs'), medianLoadEstimateMs: median('loadEstimateMs'), screenshotWaitMs: 2500 }
+  const data = { label, executable, isolatedProfile, runs, medianTotalMs: median('totalMs'), medianLoadEstimateMs: median('loadEstimateMs'), screenshotWaitMs: 2500 }
   fs.writeFileSync(path.join(root, 'build', `startup-${label}.json`), JSON.stringify(data, null, 2))
   console.log(JSON.stringify(data))
 })().catch(error => { console.error(error); process.exitCode = 1 })

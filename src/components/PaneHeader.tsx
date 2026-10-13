@@ -19,7 +19,7 @@ export function PaneHeader({ side, active, meta, fileOpsEnabled, onOpen, onSave,
   const placeholder = side === 'left' ? '왼쪽(원본)' : '오른쪽(대상)'
   return (
     <div className={`dd-pane-header dd-pane-header--${side}${active?' is-active':''}`}>
-      <span className="dd-pane-role">{side==='left'?'좌':'우'}</span>
+      <span className="dd-pane-role" title={side === 'left' ? '삭제·변경 전 내용은 코랄로 표시' : '추가·변경 후 내용은 그린으로 표시'}>{side==='left'?'− 원본':'+ 대상'}</span>
       <span className="dd-pane-header__name" title={meta.path || meta.name || placeholder}>
         {meta.name || placeholder}
       </span>

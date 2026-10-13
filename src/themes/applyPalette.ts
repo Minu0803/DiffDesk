@@ -8,6 +8,7 @@ function tokens(p: ThemePalette): Record<string, string> {
     'bg-hover': p['accent-bg'], 'bg-active': p['accent-bg'], 'border': p.border, 'border-strong': p.rim,
     'accent': p.accent, 'accent-hover': p.accent, 'accent-soft': p['accent-bg'], 'accent-fg': p.bg,
     'focus-ring': p.accent, 'danger': p['del-foreground'], 'added': p['add-foreground'], 'added-bg': p.added,
+    'selection': p.selection, 'selection-fg': p['selection-foreground'], 'selection-border': p['selection-border'],
     'removed': p['del-foreground'], 'removed-bg': p.deleted, 'modified': p.accent, 'modified-bg': p['accent-bg'],
     'chunkbtn-bg': p.bg, 'chunkbtn-fg': p.text, 'chunkbtn-border': p.border, 'chunkbtn-hover-bg': p['accent-bg'],
     'shadow': '0 1px 3px ' + p.shadow, 'scrollbar-thumb': p.muted + '66',

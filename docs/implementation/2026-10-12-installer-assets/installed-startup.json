@@ -1,0 +1,21 @@
+{
+  "label": "installer-installed",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\installer-smoke-06324da9\\DiffDesk.exe",
+  "runs": [
+    {
+      "totalMs": 3487,
+      "loadEstimateMs": 881
+    },
+    {
+      "totalMs": 3590,
+      "loadEstimateMs": 984
+    },
+    {
+      "totalMs": 3400,
+      "loadEstimateMs": 780
+    }
+  ],
+  "medianTotalMs": 3487,
+  "medianLoadEstimateMs": 881,
+  "screenshotWaitMs": 2500
+}

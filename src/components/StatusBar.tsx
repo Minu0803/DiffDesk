@@ -16,6 +16,7 @@ interface StatusBarProps {
   rightEncoding: string
   cursorLine: number
   cursorCol: number
+  selection: string
   feedback: string
   activeSide: PaneSide
   canUndo: boolean
@@ -36,15 +37,15 @@ export function StatusBar(p: StatusBarProps) {
         <i className={`dd-statusbar__dot ${dotState}`} />
         {p.diffCount > 0 ? `차이 ${p.diffCount}개 (${p.diffIndex + 1}/${p.diffCount})` : '차이 없음'}
       </span>
-      <span className="dd-statusbar__sep" />
-      <span className="dd-statusbar__item">{languageLabel(p.language)}</span>
-      <span className="dd-statusbar__sep" />
-      <span className="dd-statusbar__item">
+      <span className="dd-statusbar__sep dd-statusbar__meta" />
+      <span className="dd-statusbar__item dd-statusbar__meta">{languageLabel(p.language)}</span>
+      <span className="dd-statusbar__sep dd-statusbar__meta" />
+      <span className="dd-statusbar__item dd-statusbar__meta">
         좌 {encodingLabel(p.leftEncoding)} · 우 {encodingLabel(p.rightEncoding)}
       </span>
       <span className="dd-statusbar__sep" />
-      <span className="dd-statusbar__item">
-        Ln {p.cursorLine}, Col {p.cursorCol}
+      <span className={`dd-statusbar__item dd-statusbar__position${p.selection ? ' is-selected' : ''}`} title={p.selection || `Ln ${p.cursorLine}, Col ${p.cursorCol}`}>
+        {p.selection || `Ln ${p.cursorLine}, Col ${p.cursorCol}`}
       </span>
     </div>
   )

@@ -42,9 +42,9 @@ export function StatusBand(p: StatusBandProps) {
       {state === 'same' && p.leftLines === p.rightLines && <span className="dd-band__sub">{p.leftLines}줄 모두 일치</span>}
       {state === 'diff' && (
         <>
-          {p.counts.modified > 0 && <span className="dd-band__chip dd-band__chip--mod">수정 {p.counts.modified}</span>}
-          {p.counts.added > 0 && <span className="dd-band__chip dd-band__chip--add">추가 {p.counts.added}</span>}
-          {p.counts.removed > 0 && <span className="dd-band__chip dd-band__chip--del">삭제 {p.counts.removed}</span>}
+          {p.counts.modified > 0 && <span className="dd-band__chip dd-band__chip--mod">↔ 수정 {p.counts.modified}</span>}
+          {p.counts.added > 0 && <span className="dd-band__chip dd-band__chip--add">+ 추가 {p.counts.added}</span>}
+          {p.counts.removed > 0 && <span className="dd-band__chip dd-band__chip--del">− 삭제 {p.counts.removed}</span>}
           <div className="dd-band__ribbon">
             {p.markers.map((m, i) => (
               <button

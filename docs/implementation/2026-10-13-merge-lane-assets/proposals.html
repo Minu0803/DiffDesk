@@ -1,0 +1,197 @@
+<div id="dd-merge-proposals">
+  <div class="viz-carousel" aria-label="DiffDesk 병합 공간 개선 시안" data-previous-label="이전 시안" data-next-label="다음 시안">
+    <section data-variant="컴팩트 병합 · 추천" data-design="compact" aria-label="컴팩트 병합 시안"></section>
+    <section data-variant="편집기 가장자리" data-design="edge" aria-label="편집기 가장자리 병합 시안" hidden></section>
+    <section data-variant="상단 선택 병합" data-design="toolbar" aria-label="상단 선택 병합 시안" hidden></section>
+    <section data-variant="현재 화면" data-design="current" aria-label="현재 병합 공간" hidden></section>
+  </div>
+  <template id="dd-merge-window">
+    <div class="ddp-window">
+      <div class="ddp-title"><span class="ddp-brand"><i data-lucide="git-compare-arrows" aria-hidden="true"></i>DiffDesk</span><span class="ddp-concept">디자인 시안</span></div>
+      <div class="ddp-menu"><span>파일</span><span>비교</span><span>보기</span><span>도움말</span></div>
+      <div class="ddp-toolbar">
+        <div class="ddp-navigation"><button type="button" class="ddp-icon cursor-interaction" data-nav="prev" aria-label="이전 차이"><i data-lucide="chevron-up" aria-hidden="true"></i></button><button type="button" class="ddp-icon cursor-interaction" data-nav="next" aria-label="다음 차이"><i data-lucide="chevron-down" aria-hidden="true"></i></button><span class="ddp-counter">1 / 3</span></div>
+        <div class="ddp-merge-toolbar" hidden><button type="button" class="ddp-action cursor-interaction" data-merge="left"><i data-lucide="arrow-left" aria-hidden="true"></i>왼쪽 적용</button><button type="button" class="ddp-action cursor-interaction" data-merge="right">오른쪽 적용<i data-lucide="arrow-right" aria-hidden="true"></i></button></div>
+        <span class="ddp-toolbar-label">나란히 보기</span><span class="ddp-theme">블랙</span>
+      </div>
+      <div class="ddp-band"><span class="ddp-summary">차이 3개</span><span class="ddp-width">병합 공간 32px</span></div>
+      <div class="ddp-headings"><div><span class="ddp-badge ddp-old">− 원본</span><span>왼쪽</span></div><div class="ddp-lane-title"></div><div><span class="ddp-badge ddp-new">+ 대상</span><span>오른쪽</span></div></div>
+      <div class="ddp-editors">
+        <div class="ddp-pane ddp-left" aria-label="원본 코드"></div>
+        <div class="ddp-lane" aria-label="차이별 병합 버튼"></div>
+        <div class="ddp-pane ddp-right" aria-label="대상 코드"></div>
+      </div>
+      <div class="ddp-footer"><button type="button" class="ddp-undo cursor-interaction" disabled>병합 취소</button><span class="ddp-feedback" aria-live="polite">선택: 2–3줄</span><span class="ddp-encoding">UTF-8 · LF</span></div>
+    </div>
+  </template>
+</div>
+<style>
+#dd-merge-proposals { font-family: "Segoe UI", "Malgun Gothic", sans-serif; color: #e6e6e6; }
+#dd-merge-proposals .ddp-window { --lane: 32px; background: #0e0e0e; border: 1px solid #363636; border-radius: 8px; overflow: hidden; font-size: 12px; line-height: 1.4; }
+#dd-merge-proposals section { min-height: 516px; }
+#dd-merge-proposals [hidden] { display: none !important; }
+#dd-merge-proposals .ddp-title { height: 34px; display: flex; align-items: center; padding: 0 14px; gap: 12px; background: #202020; }
+#dd-merge-proposals .ddp-brand { display: flex; gap: 8px; align-items: center; font-weight: 500; }
+#dd-merge-proposals .ddp-brand svg { color: #9ebcff; width: 17px; height: 17px; }
+#dd-merge-proposals .ddp-concept { color: #aaa; margin-left: 16px; }
+#dd-merge-proposals .ddp-menu { height: 24px; padding: 0 14px; display: flex; align-items: center; gap: 16px; color: #c9c9c9; background: #181818; }
+#dd-merge-proposals .ddp-toolbar { min-height: 44px; padding: 5px 12px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border-bottom: 1px solid #303030; background: #181818; }
+#dd-merge-proposals button { color: #ddd; font: inherit; background: #242424; border: 1px solid #414141; border-radius: 5px; padding: 4px 8px; }
+#dd-merge-proposals button:hover { background: #303b4a; border-color: #6b8ab7; }
+#dd-merge-proposals button:disabled { opacity: .4; }
+#dd-merge-proposals .ddp-navigation { display: flex; gap: 5px; align-items: center; }
+#dd-merge-proposals .ddp-icon { width: 28px; height: 28px; display: grid; place-content: center; padding: 0; }
+#dd-merge-proposals .ddp-counter { margin-left: 4px; color: #c2c2c2; font-variant-numeric: tabular-nums; }
+#dd-merge-proposals .ddp-merge-toolbar { display: flex; gap: 5px; flex-wrap: wrap; }
+#dd-merge-proposals .ddp-action { display: inline-flex; align-items: center; gap: 5px; }
+#dd-merge-proposals svg { width: 14px; height: 14px; flex-shrink: 0; }
+#dd-merge-proposals .ddp-toolbar-label { margin-left: auto; color: #c9c9c9; }
+#dd-merge-proposals .ddp-theme { border: 1px solid #3d3d3d; border-radius: 5px; padding: 4px 12px; }
+#dd-merge-proposals .ddp-band { height: 32px; padding: 0 12px; display: flex; align-items: center; gap: 12px; background: #121212; border-bottom: 1px solid #2b2b2b; }
+#dd-merge-proposals .ddp-summary { color: #a8c8ff; font-weight: 500; }
+#dd-merge-proposals .ddp-width { color: #a9a9a9; margin-left: auto; }
+#dd-merge-proposals .ddp-headings, #dd-merge-proposals .ddp-editors { display: grid; grid-template-columns: minmax(0,1fr) var(--lane) minmax(0,1fr); }
+#dd-merge-proposals .ddp-headings { background: #181818; border-bottom: 1px solid #363636; }
+#dd-merge-proposals .ddp-headings > div { height: 36px; padding: 0 10px; display: flex; align-items: center; gap: 8px; min-width: 0; }
+#dd-merge-proposals .ddp-headings .ddp-lane-title { padding: 0; justify-content: center; color: #999; font-size: 11px; }
+#dd-merge-proposals .ddp-badge { white-space: nowrap; border-radius: 4px; padding: 2px 5px; font-size: 11px; }
+#dd-merge-proposals .ddp-old { background: #3e2323; color: #ffb5ab; }
+#dd-merge-proposals .ddp-new { background: #19382c; color: #a5e7c3; }
+#dd-merge-proposals .ddp-editors { height: 312px; position: relative; }
+#dd-merge-proposals .ddp-pane { min-width: 0; position: relative; }
+#dd-merge-proposals .ddp-line { display: flex; align-items: center; min-height: 26px; position: relative; }
+#dd-merge-proposals .ddp-number { width: 35px; flex-shrink: 0; text-align: right; padding-right: 10px; color: #828282; font: 12px/26px Consolas, monospace; }
+#dd-merge-proposals .ddp-code { font: 13px/26px Consolas, "Malgun Gothic", monospace; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; padding-right: 6px; color: #d5d5d5; }
+#dd-merge-proposals .ddp-line.ddp-removed { background: #382121; border-left: 3px solid #ff8d7c; }
+#dd-merge-proposals .ddp-line.ddp-added { background: #18382a; border-left: 3px solid #61d49c; }
+#dd-merge-proposals .ddp-code mark { background: #68342c; color: #ffc6bb; padding: 1px 2px; border-radius: 2px; }
+#dd-merge-proposals .ddp-added mark { background: #245b40; color: #b2f0ca; }
+#dd-merge-proposals .ddp-line.ddp-active { box-shadow: inset 0 1px #5987c1, inset 0 -1px #5987c1; }
+#dd-merge-proposals .ddp-lane { position: relative; background: #141414; border-left: 1px solid #303030; border-right: 1px solid #303030; }
+#dd-merge-proposals .ddp-pair { position: absolute; left: 1px; right: 1px; display: flex; flex-direction: column; gap: 2px; align-items: center; }
+#dd-merge-proposals .ddp-pair button { display: grid; place-content: center; width: 28px; height: 24px; padding: 0; color: #a9c7f4; background: #252e3b; border-color: #465b78; border-radius: 4px; }
+#dd-merge-proposals .ddp-pair button:hover { background: #36547a; border-color: #8cb2e8; }
+#dd-merge-proposals [data-design="current"] .ddp-pair { flex-direction: row; justify-content: center; gap: 4px; }
+#dd-merge-proposals [data-design="current"] .ddp-pair button { width: 26px; height: 26px; }
+#dd-merge-proposals .ddp-edge-button { position: absolute; right: 3px; width: 26px; height: 24px; display: grid; place-content: center; padding: 0; color: #a9c7f4; background: #252e3b; border-color: #465b78; z-index: 1; }
+#dd-merge-proposals .ddp-right .ddp-edge-button { right: auto; left: 1px; }
+#dd-merge-proposals [data-design="edge"] .ddp-left .ddp-code { padding-right: 33px; }
+#dd-merge-proposals [data-design="edge"] .ddp-right .ddp-number { width: 60px; }
+#dd-merge-proposals .ddp-footer { min-height: 30px; padding: 4px 10px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; border-top: 1px solid #303030; background: #181818; color: #a8a8a8; font-size: 11px; }
+#dd-merge-proposals .ddp-undo { font-size: 11px; padding: 2px 5px; }
+#dd-merge-proposals .ddp-encoding { margin-left: auto; }
+@media (max-width: 520px) {
+  #dd-merge-proposals section { min-height: 622px; }
+  #dd-merge-proposals .ddp-toolbar-label { display: none; }
+  #dd-merge-proposals .ddp-theme { margin-left: auto; }
+  #dd-merge-proposals .ddp-merge-toolbar { order: 3; width: 100%; }
+  #dd-merge-proposals .ddp-band { height: auto; min-height: 32px; flex-wrap: wrap; padding: 6px 8px; }
+  #dd-merge-proposals .ddp-width { font-size: 11px; }
+  #dd-merge-proposals .ddp-headings > div { gap: 4px; padding: 0 4px; }
+  #dd-merge-proposals .ddp-headings > div > span:last-child { display: none; }
+  #dd-merge-proposals .ddp-number { width: 24px; padding-right: 5px; font-size: 11px; }
+  #dd-merge-proposals .ddp-code { font-size: 11px; }
+  #dd-merge-proposals [data-design="edge"] .ddp-right .ddp-number { width: 40px; }
+  #dd-merge-proposals .ddp-editors { height: 384px; }
+  #dd-merge-proposals .ddp-line { min-height: 32px; }
+  #dd-merge-proposals .ddp-code { line-height: 16px; }
+}
+@media (pointer: coarse) {
+  #dd-merge-proposals .ddp-icon, #dd-merge-proposals .ddp-action, #dd-merge-proposals .ddp-undo { min-height: 44px; min-width: 44px; }
+  #dd-merge-proposals .ddp-pair button, #dd-merge-proposals .ddp-edge-button { width: 44px; height: 44px; }
+  #dd-merge-proposals [data-design="compact"] .ddp-window.ddp-has-diff { --lane: 48px !important; }
+  #dd-merge-proposals [data-design="edge"] .ddp-left .ddp-code { padding-right: 49px; }
+  #dd-merge-proposals [data-design="edge"] .ddp-right .ddp-number { width: 52px; }
+  #dd-merge-proposals [data-design="current"] .ddp-window.ddp-has-diff { --lane: 96px !important; }
+}
+</style>
+<script>
+(() => {
+  const root = document.getElementById('dd-merge-proposals');
+  const template = document.getElementById('dd-merge-window');
+  const choices = { scenario: 'changes' };
+  const original = ['const opts = {', '  mode: "dark",', '  wrap: false,', '  font: 13,', '  gap: 4,', '};', '', 'const title =', '  "원본";', '', 'save(opts);', 'return true;'];
+  const modified = ['const opts = {', '  mode: "auto",', '  wrap: true,', '  font: 13,', '  gap: 8,', '};', '', 'const title =', '  "수정본";', '', 'save(opts);', 'return true;'];
+  const chunks = [[1,2],[4],[8]];
+  const variantStates = [];
+  const widths = { compact: 32, edge: 2, toolbar: 2, current: 64 };
+  const icon = (name) => { const element = document.createElement('i'); element.dataset.lucide = name; element.setAttribute('aria-hidden','true'); return element; };
+  root.querySelectorAll('[data-design]').forEach(section => {
+    section.append(template.content.cloneNode(true));
+    const win = section.querySelector('.ddp-window');
+    const design = section.dataset.design;
+    const state = { section, win, design, active: 0, applied: new Map(), history: [], message: '' };
+    variantStates.push(state);
+    section.querySelector('.ddp-concept').textContent = design === 'current' ? '현재 구조 · 비교용' : '디자인 시안';
+    section.querySelector('.ddp-merge-toolbar').hidden = design !== 'toolbar';
+    section.querySelector('.ddp-lane-title').textContent = design === 'current' ? '부분 병합' : '';
+    section.querySelectorAll('[data-nav]').forEach(button => button.addEventListener('click', () => { const available = chunks.map((_, index) => index).filter(index => !state.applied.has(index)); if (available.length) state.active = available[(available.indexOf(state.active) + (button.dataset.nav === 'next' ? 1 : available.length - 1)) % available.length]; state.message = ''; render(state); }));
+    section.querySelectorAll('[data-merge]').forEach(button => button.addEventListener('click', () => merge(state, state.active, button.dataset.merge)));
+    section.querySelector('.ddp-undo').addEventListener('click', () => { const previous = state.history.pop(); if (previous) { state.applied = previous; state.message = '병합을 취소했습니다'; render(state); } });
+  });
+  function merge(state, index, side) {
+    state.history.push(new Map(state.applied));
+    state.applied.set(index, side);
+    state.message = (side === 'right' ? '왼쪽 → 오른쪽' : '오른쪽 → 왼쪽') + ' 병합 완료';
+    render(state);
+  }
+  function render(state) {
+    const hasDiff = choices.scenario === 'changes';
+    const available = chunks.map((_, index) => index).filter(index => !state.applied.has(index));
+    const remaining = hasDiff ? available.length : 0;
+    if (remaining && state.applied.has(state.active)) state.active = available[0];
+    const laneWidth = state.design === 'current' ? 64 : remaining ? widths[state.design] : 2;
+    state.win.style.setProperty('--lane', laneWidth + 'px');
+    state.win.classList.toggle('ddp-has-diff', remaining > 0);
+    const step = window.matchMedia('(max-width: 520px)').matches ? 32 : 26;
+    state.section.querySelector('.ddp-width').textContent = '병합 공간 ' + laneWidth + 'px' + (state.design === 'edge' && remaining ? ' · 버튼은 편집기 여백' : '');
+    state.section.querySelector('.ddp-summary').textContent = choices.scenario === 'empty' ? '비교할 내용이 없습니다' : remaining ? '차이 ' + remaining + '개' : '두 문서가 같습니다';
+    state.section.querySelector('.ddp-counter').textContent = remaining ? (available.indexOf(state.active) + 1) + ' / ' + remaining : '0 / 0';
+    state.section.querySelector('.ddp-feedback').textContent = state.message || (remaining ? '선택: ' + (chunks[state.active][0] + 1) + (chunks[state.active].length > 1 ? '–' + (chunks[state.active].at(-1) + 1) : '') + '줄' : '차이 없음');
+    state.section.querySelector('.ddp-undo').disabled = !state.history.length;
+    state.section.querySelectorAll('[data-nav], [data-merge]').forEach(button => button.disabled = !remaining);
+    for (const side of ['left', 'right']) {
+      const pane = state.section.querySelector('.ddp-' + side);
+      pane.replaceChildren();
+      const lines = choices.scenario === 'empty' ? [''] : [...(side === 'left' || choices.scenario === 'equal' ? original : modified)];
+      for (const [index, appliedSide] of state.applied) for (const lineIndex of chunks[index]) if (side === appliedSide && hasDiff) lines[lineIndex] = side === 'right' ? original[lineIndex] : modified[lineIndex];
+      lines.forEach((text, index) => {
+        const row = document.createElement('div'); row.className = 'ddp-line';
+        const chunkIndex = hasDiff ? chunks.findIndex(chunk => chunk.includes(index)) : -1;
+        if (chunkIndex >= 0 && !state.applied.has(chunkIndex)) { row.classList.add(side === 'left' ? 'ddp-removed' : 'ddp-added'); if (chunkIndex === state.active) row.classList.add('ddp-active'); }
+        const number = document.createElement('span'); number.className = 'ddp-number'; number.textContent = index + 1;
+        const code = document.createElement('span'); code.className = 'ddp-code';
+        const split = text.indexOf(':');
+        if (chunkIndex >= 0 && !state.applied.has(chunkIndex) && split >= 0) { code.append(document.createTextNode(text.slice(0, split + 1) + ' ')); const mark = document.createElement('mark'); mark.textContent = text.slice(split + 1).trim(); code.append(mark); }
+        else code.textContent = text || ' ';
+        row.append(number, code);
+        row.addEventListener('click', () => { if (chunkIndex >= 0) { state.active = chunkIndex; state.message = ''; render(state); } });
+        pane.append(row);
+      });
+    }
+    const lane = state.section.querySelector('.ddp-lane'); lane.replaceChildren();
+    if (hasDiff) chunks.forEach((chunk, index) => {
+      if (state.applied.has(index) || state.design === 'toolbar') return;
+      const top = chunk[0] * step + (chunk.length === 1 ? -11 : 1);
+      const pair = document.createElement('div'); pair.className = 'ddp-pair'; pair.style.top = Math.max(0, top) + 'px';
+      for (const side of ['right', 'left']) {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'cursor-interaction';
+        const label = (chunk[0] + 1) + (chunk.length > 1 ? '–' + (chunk.at(-1) + 1) : '') + '줄: ' + (side === 'right' ? '왼쪽 내용을 오른쪽에 적용' : '오른쪽 내용을 왼쪽에 적용');
+        button.setAttribute('aria-label', label); button.dataset.tooltip = label; button.append(icon(side === 'right' ? 'arrow-right' : 'arrow-left'));
+        button.addEventListener('click', () => merge(state, index, side));
+        if (state.design === 'edge') { button.classList.add('ddp-edge-button'); button.style.top = (chunk[0] * step + 1) + 'px'; state.section.querySelector(side === 'right' ? '.ddp-left' : '.ddp-right').append(button); }
+        else pair.append(button);
+      }
+      if (state.design !== 'edge') lane.append(pair);
+    });
+    if (globalThis.lucide) lucide.createIcons({ attrs: { width: 14, height: 14 } });
+  }
+  function renderAll() { variantStates.forEach(render); }
+  renderAll();
+  window.addEventListener('resize', renderAll);
+  if (globalThis.Tweak) {
+    const controls = new Tweak({ container: root, onChange: () => { variantStates.forEach(state => { state.applied.clear(); state.history = []; state.message = ''; }); renderAll(); } });
+    controls.addSelect(choices, 'scenario', { label: '비교 화면 상태', options: [{label:'차이가 있는 화면',value:'changes'}, {label:'빈 화면',value:'empty'}, {label:'차이 없는 문서',value:'equal'}] });
+  }
+})();
+</script>

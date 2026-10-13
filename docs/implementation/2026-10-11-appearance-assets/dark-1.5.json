@@ -1,0 +1,23 @@
+{
+  "width": 1270,
+  "background": "rgb(14, 14, 14)",
+  "startup": "#0e0e0e",
+  "laneWidth": 64,
+  "dropAligned": true,
+  "toolbarOverflow": 0,
+  "statusOverflow": false,
+  "reduced": false,
+  "selection": "선택 14:4 → 16:14 · 3줄",
+  "selectionPixels": 1941,
+  "selectedGlyphPixels": 291,
+  "reverseDrag": true,
+  "selectionCleared": true,
+  "selectionFocus": true,
+  "replaceSelection": true,
+  "undo": true,
+  "clearSelectedDocument": true,
+  "reload": true,
+  "drop": true,
+  "cancelledDrop": true,
+  "errors": []
+}

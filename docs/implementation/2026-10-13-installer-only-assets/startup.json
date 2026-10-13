@@ -1,0 +1,22 @@
+{
+  "label": "installer-only",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\installer-only-extracted-dQGbAA\\DiffDesk.exe",
+  "isolatedProfile": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\startup-installer-only-yeBJ7u\\profile",
+  "runs": [
+    {
+      "totalMs": 4082,
+      "loadEstimateMs": 1486
+    },
+    {
+      "totalMs": 3370,
+      "loadEstimateMs": 787
+    },
+    {
+      "totalMs": 3394,
+      "loadEstimateMs": 784
+    }
+  ],
+  "medianTotalMs": 3394,
+  "medianLoadEstimateMs": 787,
+  "screenshotWaitMs": 2500
+}
