@@ -37,8 +37,8 @@ export function Toolbar(p: ToolbarProps) {
         </MotionButton>
         </span>
         <span className="dd-toolbar__divider" />
-        <MotionButton type="button" className="dd-btn" title="좌우 바꾸기 (Ctrl+Alt+X)" onClick={p.onSwap}>
-          ⇄ 바꾸기
+        <MotionButton type="button" className="dd-btn" aria-label="좌우 전체 내용 교환" title="두 문서 전체 교환 · 왼쪽 원본과 오른쪽 대상 위치 유지 (Ctrl+Alt+X)" onClick={p.onSwap}>
+          ⇄ 전체 교환
         </MotionButton>
         <MotionButton type="button" className="dd-btn" title="양쪽 모두 지우기" onClick={p.onClear}>
           지우기

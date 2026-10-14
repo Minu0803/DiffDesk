@@ -277,6 +277,12 @@ export default function App({ initialSettings = DEFAULT_SETTINGS }: { initialSet
       right: nextRight.dirty ? -1 : b.modified.getAlternativeVersionId()
     }
     commitMetas({ left: nextLeft, right: nextRight })
+    window.clearTimeout(receiptTimerRef.current)
+    setReceipt(null)
+    setFeedback('좌우 전체 내용을 교환했습니다')
+    const focused = settingsRef.current.renderSideBySide && focusedSideRef.current === 'left'
+      ? b.editor.getOriginalEditor() : b.editor.getModifiedEditor()
+    focused.focus()
   }
 
   function copyAllTo(dir: MergeDirection): void {

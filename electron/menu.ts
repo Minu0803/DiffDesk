@@ -50,7 +50,7 @@ export function buildAppMenu(): Menu {
         item('모두 오른쪽으로 복사', 'copy-all-ltr', 'Ctrl+Alt+Right'),
         item('모두 왼쪽으로 복사', 'copy-all-rtl', 'Ctrl+Alt+Left'),
         { type: 'separator' },
-        item('좌우 바꾸기', 'swap', 'Ctrl+Alt+X'),
+        item('좌우 전체 내용 교환', 'swap', 'Ctrl+Alt+X'),
         item('모두 지우기', 'clear-all')
       ]
     },

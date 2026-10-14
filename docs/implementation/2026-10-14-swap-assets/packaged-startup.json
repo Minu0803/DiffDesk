@@ -1,0 +1,22 @@
+{
+  "label": "full-swap-final",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\full-swap-final-extracted-7rtngk\\DiffDesk.exe",
+  "isolatedProfile": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\startup-full-swap-final-LvylJj\\profile",
+  "runs": [
+    {
+      "totalMs": 5232,
+      "loadEstimateMs": 1729
+    },
+    {
+      "totalMs": 4181,
+      "loadEstimateMs": 1382
+    },
+    {
+      "totalMs": 3745,
+      "loadEstimateMs": 1112
+    }
+  ],
+  "medianTotalMs": 4181,
+  "medianLoadEstimateMs": 1382,
+  "screenshotWaitMs": 2500
+}

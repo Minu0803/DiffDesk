@@ -1,0 +1,21 @@
+{
+  "setup": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\release\\full-swap-verified-2026-10-14\\DiffDesk-Setup-1.0.0.exe",
+  "size": 84567916,
+  "sha256": "94fd972c1749c784180298c28c75609a6c90491db41cd9bff5b8a3c26c33f3cd",
+  "extracted": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\full-swap-final-extracted-7rtngk",
+  "executable": "C:\\Users\\Minu\\Documents\\GitHub\\DiffDesk\\build\\full-swap-final-extracted-7rtngk\\DiffDesk.exe",
+  "archiveIntegrity": true,
+  "setupPayloadIntegrity": true,
+  "x64": true,
+  "packageFiles": 76,
+  "buildFiles": 101,
+  "mismatches": 0,
+  "qaFiles": 0,
+  "licenseNotices": [
+    "LICENSE.electron.txt",
+    "LICENSES.chromium.html",
+    "resources/licenses/Monaco-LICENSE.txt",
+    "resources/licenses/React-LICENSE.txt",
+    "resources/licenses/ReactDOM-LICENSE.txt"
+  ]
+}

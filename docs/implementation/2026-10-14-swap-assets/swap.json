@@ -1,0 +1,37 @@
+{
+  "fullContents": true,
+  "includesUnsavedEdits": true,
+  "fixedRoles": true,
+  "doubleExchange": true,
+  "nativeMenu": true,
+  "emptyLeft": true,
+  "emptyRight": true,
+  "bothEmpty": true,
+  "includesPartialMerge": true,
+  "clearsOldReceipt": true,
+  "inlineView": true,
+  "minimum": false,
+  "laneWidth": 64,
+  "toolbarOverflow": false,
+  "swapped": {
+    "left": "target first\nshared second\ntarget third\ntarget fourth\ntarget last",
+    "right": "edited source first\nshared second\n\nsource fourth\nsource fifth\nsource last",
+    "names": [
+      "target.txt",
+      "source.txt"
+    ],
+    "roles": [
+      "− 원본",
+      "+ 대상"
+    ],
+    "dirty": [
+      false,
+      true
+    ],
+    "laneWidth": 64,
+    "gutterHeading": "부분 병합",
+    "toolbarOverflow": false,
+    "feedback": "좌우 전체 내용을 교환했습니다"
+  },
+  "errors": []
+}
